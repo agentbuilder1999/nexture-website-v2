@@ -541,3 +541,17 @@ sprint-XX/assets/
 
 ### Figma 接入后（Sprint-03起）
 Figma 可精确导出每个资产的尺寸和格式，进一步规范资产交付标准。
+
+### 资产分工（2026-03-11 补充明确）
+
+| 资产类型 | 负责方 | 工具 |
+|----------|--------|------|
+| 渐变/毛玻璃/粒子/动效 | Aria | CSS/Canvas |
+| 图标、几何装饰、简单插画 | **Aria** | **SVG 直接生成** |
+| 品牌 Logo | Victor 提供 | — |
+| 合作方 Logo | Victor 提供 | — |
+| Hero 视频 | Victor 提供 | — |
+| 团队照片、产品截图 | Victor 提供 | 真实图片 |
+| 复杂 AI 生成图（概念图/场景插画）| Victor | Midjourney / Ideogram |
+
+**原则：能用 SVG 表达的，Aria 直接生成；Victor 只负责无法程序化生成的真实或复杂视觉内容。**
