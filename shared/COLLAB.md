@@ -24,12 +24,12 @@
 
 ```bash
 # ✅ 正确：用 exec 写入共享工作区
-cat > ~/.openclaw/workspace-shared/docs/filename.md << 'CONTENT'
+cat > ~/.openclaw/workspace-shared/projects/nexture-website/docs/filename.md << 'CONTENT'
 文件内容...
 CONTENT
 
 # ✅ 也可以通过软链接
-cat > workspace-shared/docs/filename.md << 'CONTENT'
+cat > workspace-shared/projects/nexture-website/docs/filename.md << 'CONTENT'
 文件内容...
 CONTENT
 
@@ -39,8 +39,8 @@ CONTENT
 
 ### 1.3 读取方式
 
-- `read` 工具：可通过软链接 `workspace-shared/docs/filename.md` 读取
-- `exec` + `cat`：可用绝对路径 `~/.openclaw/workspace-shared/docs/filename.md`
+- `read` 工具：可通过软链接 `workspace-shared/projects/nexture-website/docs/filename.md` 读取
+- `exec` + `cat`：可用绝对路径 `~/.openclaw/workspace-shared/projects/nexture-website/docs/filename.md`
 
 ---
 
@@ -174,7 +174,7 @@ main                              ← 生产分支，只接受 PR
 
 ```
 ✅ HANDOFF: [tech-spec]
-📄 路径: ~/.openclaw/workspace-shared/docs/tech-spec.md
+📄 路径: ~/.openclaw/workspace-shared/projects/nexture-website/docs/tech-spec.md
 📋 摘要: Landing page 粒子方案选型（Canvas 2D）+ HTML 结构 + 技术约束
 📐 验收标准:
   - [ ] 粒子方案有对比分析和推荐理由
@@ -303,7 +303,7 @@ Atlas (docs/规范)
   3. ...
 
 📎 前置阅读:
-  - ~/.openclaw/workspace-shared/docs/xxx.md
+  - ~/.openclaw/workspace-shared/projects/nexture-website/docs/xxx.md
   - ...
 
 👥 参与: @Atlas @Aria @Finn @Rex @Nova（或指定子集）
@@ -414,13 +414,13 @@ Sprint 长度: 由 q 根据项目节奏决定（通常 1-2 周）
 ## 决策记录规范
 
 ### DECISIONS.md（q 维护，所有决策）
-路径：`~/.openclaw/workspace-shared/docs/DECISIONS.md`
+路径：`~/.openclaw/workspace-shared/projects/nexture-website/docs/DECISIONS.md`
 记录：**所有讨论产生的决策**，无论大小
 格式：日期 | 议题 | 决策 | 理由 | 影响方 | 状态
 维护：q 在每次 [[RESOLVED]] 后自动写入
 
 ### ADR.md（Atlas 维护，架构决策）
-路径：`~/.openclaw/workspace-shared/docs/ADR.md`
+路径：`~/.openclaw/workspace-shared/projects/nexture-website/docs/ADR.md`
 记录：**仅架构级决策**（系统设计、技术选型、API 约定）
 格式：标准 ADR（背景/决策/理由/影响/状态）
 维护：Atlas 在做架构决策时主动写入

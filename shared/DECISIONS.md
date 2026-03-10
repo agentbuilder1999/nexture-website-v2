@@ -46,3 +46,11 @@
 **理由**: Sprint-02 仍是纯静态 HTML，无部署需求，避免过度工程化
 **影响方**: Rex
 **状态**: ⏳ Sprint-02 执行
+
+### 2026-03-11 网站结构方案
+**发起方**: Victor
+**参与方**: Atlas, Aria, Finn
+**决策**: 保留多页面结构（Home/Product/Team/Media/Contact），不改为单页 Landing Page
+**理由**: B2B 医疗受众有深度阅读习惯，各页独立聚焦内容，专业感更强，符合决策链阅读习惯
+**影响方**: Atlas（tech-spec 更新为 5 页架构）、Aria（design-spec 多页版）、Finn（5个HTML文件）
+**状态**: ⏳ Sprint-02 执行

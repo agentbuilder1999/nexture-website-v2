@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Nexture Website Content Schema",
+  "version": "1.0.0",
+  "description": "Defines all text fields for nexture.nz multi-page site. Frontend reads fields by key; copy.md provides the values. charLimit is inclusive max character count.",
+  "charLimits": {
+    "nav_item":          20,
+    "hero_title":        60,
+    "hero_tagline":     120,
+    "cta_primary":       20,
+    "cta_secondary":     20,
+    "section_heading":   60,
+    "card_title":        50,
+    "card_body":        160,
+    "quote_text":       160,
+    "body_short":       120,
+    "body_paragraph":   300,
+    "footer_legal":     200,
+    "disclaimer":       400,
+    "address_block":    200,
+    "podcast_tagline":  120
+  },
+  "pages": {
+    "global": {
+      "nav": {
+        "items": ["nav_item", "nav_item", "nav_item", "nav_item", "nav_item"],
+        "keys":  ["nav_home", "nav_product", "nav_team", "nav_media", "nav_contact"]
+      },
+      "footer": {
+        "copyright":   "footer_legal",
+        "disclaimer":  "disclaimer"
+      }
+    },
+    "home": {
+      "hero": {
+        "brand":       "hero_title",
+        "headline":    "hero_title",
+        "subheadline": "hero_tagline",
+        "cta_primary": "cta_primary",
+        "cta_secondary": "cta_secondary"
+      },
+      "services": {
+        "section_heading": "section_heading",
+        "items": [
+          { "title": "card_title", "body": "card_body" },
+          { "title": "card_title", "body": "card_body" },
+          { "title": "card_title", "body": "card_body" },
+          { "title": "card_title", "body": "card_body" }
+        ]
+      }
+    },
+    "product": {
+      "hero": {
+        "product_name":  "card_title",
+        "tagline":       "body_short",
+        "headline":      "hero_title",
+        "subheadline":   "hero_tagline"
+      },
+      "features": {
+        "section_heading": "section_heading",
+        "items": [
+          { "title": "card_title", "body": "card_body" },
+          { "title": "card_title", "body": "card_body" },
+          { "title": "card_title", "body": "card_body" },
+          { "title": "card_title", "body": "card_body" },
+          { "title": "card_title", "body": "card_body" }
+        ]
+      },
+      "detection": {
+        "section_heading": "section_heading",
+        "items": [
+          { "title": "card_title", "body": "card_body" },
+          { "title": "card_title", "body": "card_body" }
+        ]
+      },
+      "who_we_help": {
+        "section_heading": "section_heading",
+        "items": [
+          { "role": "card_title", "quote": "quote_text" },
+          { "role": "card_title", "quote": "quote_text" },
+          { "role": "card_title", "quote": "quote_text" }
+        ]
+      },
+      "cta": {
+        "heading": "section_heading",
+        "body":    "body_paragraph",
+        "button":  "cta_primary"
+      }
+    },
+    "team": {
+      "hero": {
+        "section_heading": "section_heading",
+        "subheading":      "hero_tagline"
+      },
+      "pillars": {
+        "items": [
+          { "title": "card_title", "body": "card_body" },
+          { "title": "card_title", "body": "card_body" },
+          { "title": "card_title", "body": "card_body" },
+          { "title": "card_title", "body": "card_body" },
+          { "title": "card_title", "body": "card_body" }
+        ]
+      }
+    },
+    "media": {
+      "hero": {
+        "section_heading": "section_heading",
+        "subheading":      "hero_tagline"
+      },
+      "featured_in": {
+        "section_heading": "section_heading",
+        "items": [
+          { "publication": "card_title", "headline": "card_body" },
+          { "publication": "card_title", "headline": "card_body" },
+          { "publication": "card_title", "headline": "card_body" },
+          { "publication": "card_title", "headline": "card_body" },
+          { "publication": "card_title", "headline": "card_body" }
+        ]
+      },
+      "podcast": {
+        "title":   "card_title",
+        "tagline": "podcast_tagline",
+        "body":    "card_body"
+      }
+    },
+    "contact": {
+      "hero": {
+        "section_heading": "section_heading",
+        "subheading":      "hero_tagline"
+      },
+      "address": {
+        "block": "address_block"
+      },
+      "form": {
+        "cta_label": "cta_primary"
+      }
+    }
+  }
+}
