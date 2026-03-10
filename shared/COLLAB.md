@@ -428,3 +428,71 @@ Sprint 长度: 由 q 根据项目节奏决定（通常 1-2 周）
 **规则：同一决策不重复记录。**
 - 架构决策 → Atlas 写 ADR.md，q 在 DECISIONS.md 写一行摘要+指向 ADR
 - 非架构决策 → 只写 DECISIONS.md
+
+---
+
+## 设计工作流（标准流程 v1.0，2026-03-11 Victor 确认）
+
+### 适用范围
+所有需要视觉设计的项目（网站/产品界面/品牌物料）
+
+### 流程
+
+```
+Step 1 — Victor 提供风格参考
+  → 截图（网站/界面/品牌参考）放入 sprint-XX/assets/references/
+
+Step 2 — Aria 分析 + 生成 prompt
+  → 读取参考截图
+  → 提炼设计理念和原则（中文说明）
+  → 生成标准化英文 prompt（供 AI 图像生成工具使用）
+
+Step 3 — Victor 生成概念图
+  → 将 prompt 提交到 AI 工具（推荐优先级: Midjourney > Ideogram > Gemini）
+  → 将选定概念图放入 sprint-XX/assets/concept/selected.png
+  → 迭代版本命名: concept-01.png, concept-02.png ...
+
+Step 4 — Aria 拆解设计规范
+  → 读取 selected.png + 风格参考
+  → 输出 design-spec.md（含：颜色系统/排版/组件规范/动效/响应式规则）
+  → 格式要求：Finn 可直接操作，含具体 CSS token 值
+
+Step 5 — Finn 实现
+  → 读取 design-spec.md + tech-spec.md + copy.md
+  → 实现 → 截图验证 → 最多3轮迭代
+```
+
+### Aria Prompt 标准结构
+```
+[Style]: <整体风格，如 dark tech / clean minimal / medical precision>
+[Layout]: <页面结构描述>
+[Colors]: <主色调>
+[Mood]: <情感基调>
+[Audience]: <目标受众，如 B2B medical / consumer>
+[Reference style]: <参照风格，如 NVIDIA / Apple / Stripe>
+[Output]: UI concept, full-page, no text overlay, high quality
+```
+
+### AI 图像工具推荐
+| 工具 | 适合 | 质量 |
+|------|------|------|
+| Midjourney | UI概念图、视觉风格探索 | ⭐⭐⭐⭐⭐ |
+| Ideogram | 含文字的设计稿 | ⭐⭐⭐⭐ |
+| Gemini | 零门槛，已有账号 | ⭐⭐⭐ |
+| Adobe Firefly | 商用安全场景 | ⭐⭐⭐ |
+
+### 路径约定
+```
+sprint-XX/
+└── assets/
+    ├── references/   ← Victor 提供的风格参考截图
+    ├── concept/      ← AI 生成概念图
+    │   ├── concept-01.png
+    │   └── selected.png   ← 最终确认版本
+    └── (其他素材)
+```
+
+### Sprint 阶段标记
+- Sprint-01: 无此流程（原型阶段）
+- Sprint-02: 方案A（沿用 Aria markdown 规范，无概念图）
+- Sprint-03 起: 正式采用此标准流程
