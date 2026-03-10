@@ -496,3 +496,48 @@ sprint-XX/
 - Sprint-01: 无此流程（原型阶段）
 - Sprint-02: 方案A（沿用 Aria markdown 规范，无概念图）
 - Sprint-03 起: 正式采用此标准流程
+
+---
+
+## 资产生成流程（2026-03-11 Victor 确认）
+
+### 核心原则
+> 概念图 = 视觉方向锚点，不是待切割的源文件。
+> CSS 负责结构和效果；独立资产各自单独生成。
+
+### 资产分类
+
+**类型 A — CSS/SVG 直接实现（无需图片文件）**
+- 渐变背景、毛玻璃卡片、噪点质感、几何装饰
+- 粒子效果（Canvas）、光晕/发光效果
+- → Aria 在 design-spec.md 中写清 CSS token，Finn 直接实现
+
+**类型 B — 需要独立文件的资产**
+- Logo、合作方Logo → Victor 已提供
+- Hero 视频 → Victor 提供
+- 产品截图/团队照片 → Victor 提供
+- 插画/图标/装饰图形 → 单独 AI 生成（不从概念图切割）
+
+### 独立资产生成流程
+```
+概念图确认后
+  → Aria 识别需要独立文件的视觉元素
+  → 针对每个元素单独写 prompt
+  → Victor 用 AI 工具（Midjourney 首选）单独生成
+  → 放入 sprint-XX/assets/graphics/
+  → Finn 直接引用路径
+```
+
+### 路径约定
+```
+sprint-XX/assets/
+  ├── references/     ← Victor 提供的风格参考
+  ├── concept/        ← AI 生成概念图
+  │   └── selected.png
+  ├── graphics/       ← 单独生成的资产（插画/图标/装饰）
+  ├── photos/         ← 团队照片/产品截图（Victor 提供）
+  └── (logo.png, hero-web.mp4 等已有素材)
+```
+
+### Figma 接入后（Sprint-03起）
+Figma 可精确导出每个资产的尺寸和格式，进一步规范资产交付标准。
