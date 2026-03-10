@@ -187,12 +187,12 @@ main                              ← 生产分支，只接受 PR
 ### 4.5 依赖链
 
 ```
-Atlas (docs/规范)
-  → Aria (design/)    → Finn (frontend/)
-  → Rex (backend/)
-  → Nova (ai_modules/)
-                         ↓
-                    集成 → dev → main
+Atlas (shared/ + projects/*/docs/)
+  → Aria (projects/nexture-website/assets/)  → Finn (projects/nexture-website/delivery/)
+  → Rex (projects/theraseus/backend/)
+  → Nova (projects/theraseus/datasets/)
+                                                ↓
+                                           集成 → dev → main
 ```
 
 ---

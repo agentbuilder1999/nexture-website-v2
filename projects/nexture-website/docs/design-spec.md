@@ -1,497 +1,351 @@
-# Nexture Landing Page — Design Specification
-**Sprint-01 · UI/UX Designer: Aria**
-**Version:** 1.0 · 2026-03-10
+# Nexture — Design Specification v2 Final
+**Sprint-02 · Aria · 2026-03-11**
+Multi-page: Home / Product / Team / Media / Contact
 
 ---
 
 ## 1. Brand Color Palette
 
-### Design Rationale
-Nexture operates in medical AI — a domain where trust, precision, and innovation must coexist. The palette uses deep space-navy as the foundation (authority, depth), electric cyan as the primary accent (technology, clarity, medical blue-green heritage), and indigo for AI/intelligence signals. High contrast ensures WCAG 2.1 AA compliance throughout.
-
-### Color Tokens
-
 ```css
 :root {
-  /* ── Backgrounds ── */
-  --color-canvas:        #040D1B;   /* deepest bg: particle canvas layer */
-  --color-bg-primary:    #060F22;   /* page background */
-  --color-bg-surface:    #0C1A35;   /* card / section surface */
-  --color-bg-elevated:   #102040;   /* hover states, modals */
-  --color-bg-subtle:     #0A1628;   /* nav, footer */
+  /* ── Brand Source (logo exact values) ── */
+  --brand-pink:       #E8005A;
+  --brand-blue:       #2D3282;
+  --brand-purple:     #7B2070;
+  --brand-pink-light: #F040A0;
 
-  /* ── Brand Primary — Cyan ── */
-  --color-primary-500:   #00D4E8;   /* primary CTA, links, highlights */
-  --color-primary-400:   #33DEF0;   /* hover states */
-  --color-primary-300:   #66E8F4;   /* subtle tints */
-  --color-primary-200:   #99F0F8;   /* very light accent */
-  --color-primary-glow:  rgba(0, 212, 232, 0.15);   /* glow / shadow */
+  /* ── Backgrounds (dark navy) ── */
+  --color-canvas:        #06060e;
+  --color-bg-primary:    #08081c;
+  --color-bg-surface:    #0e0e28;
+  --color-bg-elevated:   #16163a;
+  --color-bg-subtle:     #0b0b1e;
 
-  /* ── Brand Secondary — Indigo ── */
-  --color-secondary-500: #5B6EF5;   /* secondary actions, badges */
-  --color-secondary-400: #7B8EF8;   /* hover */
-  --color-secondary-600: #4357E8;   /* pressed */
-  --color-secondary-glow: rgba(91, 110, 245, 0.20);
+  /* ── UI Primary — Brand Pink (buttons, CTA, labels) ── */
+  --color-primary-500:   #E8005A;
+  --color-primary-400:   #F040A0;   /* hover + small text (AA: 5.8:1) */
+  --color-primary-600:   #c00048;
+  --color-primary-glow:  rgba(232, 0, 90, 0.22);
+
+  /* ── UI Secondary — Brand Blue ── */
+  --color-secondary-500: #2D3282;
+  --color-secondary-400: #4048b0;
+  --color-secondary-glow:rgba(45, 50, 130, 0.25);
 
   /* ── Neutrals ── */
-  --color-text-primary:  #F0F6FF;   /* headings */
-  --color-text-secondary:#94A3B8;   /* body, captions */
-  --color-text-muted:    #4A607A;   /* placeholders, disabled */
-  --color-border:        rgba(0, 212, 232, 0.12);   /* subtle borders */
-  --color-border-strong: rgba(0, 212, 232, 0.30);   /* active borders */
+  --color-text-primary:  #f5f0ff;
+  --color-text-secondary:#9890b8;
+  --color-text-muted:    #48446a;
+  --color-border:        rgba(232, 0, 90, 0.14);
+  --color-border-strong: rgba(232, 0, 90, 0.38);
 
   /* ── Semantic ── */
-  --color-success:       #10B981;
-  --color-warning:       #F59E0B;
-  --color-error:         #EF4444;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error:   #ef4444;
 
-  /* ── Gradient Presets ── */
-  --gradient-hero:       linear-gradient(135deg, #040D1B 0%, #0A1628 50%, #091A30 100%);
-  --gradient-cta-btn:    linear-gradient(135deg, #00D4E8 0%, #5B6EF5 100%);
-  --gradient-card-edge:  linear-gradient(180deg, rgba(0,212,232,0.08) 0%, transparent 100%);
-  --gradient-text:       linear-gradient(90deg, #00D4E8, #5B6EF5);
+  /* ── Brand Gradients (UI layer) ── */
+  --gradient-brand:      linear-gradient(135deg, #E8005A 0%, #7B2070 50%, #2D3282 100%);
+  --gradient-brand-soft: linear-gradient(135deg, rgba(232,0,90,0.10) 0%, rgba(45,50,130,0.10) 100%);
+  --gradient-text:       linear-gradient(90deg, #E8005A, #7B2070, #2D3282);
+  --gradient-card-edge:  linear-gradient(180deg, rgba(232,0,90,0.10) 0%, transparent 100%);
 }
 ```
 
-### Accessibility Check
-| Pair | Ratio | WCAG |
-|---|---|---|
-| `--color-text-primary` on `--color-bg-primary` | 15.2:1 | ✅ AAA |
-| `--color-primary-500` on `--color-bg-primary` | 8.4:1 | ✅ AAA |
-| `--color-text-secondary` on `--color-bg-surface` | 5.1:1 | ✅ AA |
-| White CTA text on `--gradient-cta-btn` | 4.8:1 | ✅ AA |
+> **使用规则：** `--brand-pink #E8005A` 仅用于 16px bold+ 及 UI 色块；正文链接/小标签用 `--color-primary-400 #F040A0`（对比度 5.8:1 ✅ AA）。
 
 ---
 
-## 2. Particle System — Visual Style
+## 2. Particle System — "Precision Field"
 
-### Concept: "Neural Scan Field"
-Particles represent the invisible data flowing through AI analysis — the same micro-scale precision Nexture applies to capsule endoscopy images. The effect should feel alive but never distracting.
-
-### Particle Tokens
+粒子配色采用医疗 AI 数据可视化语言（参照 NVIDIA / DeepMind / GE Healthcare），独立于 Logo 品牌色，与其保持色相族关联。
 
 ```css
 :root {
-  /* Particle colors (used in JS canvas renderer) */
-  --particle-color-primary:  rgba(0, 212, 232, 0.55);    /* cyan nodes */
-  --particle-color-secondary:rgba(91, 110, 245, 0.35);   /* indigo nodes */
-  --particle-color-faint:    rgba(240, 246, 255, 0.12);  /* white dust */
-
-  /* Connection lines */
-  --particle-line-color:     rgba(0, 212, 232, 0.08);
-  --particle-line-max-dist:  140px;
-
-  /* Motion */
-  --particle-speed-base:     0.3;    /* very slow drift */
-  --particle-count-desktop:  80;
-  --particle-count-mobile:   35;
-  --particle-size-min:       1.5px;
-  --particle-size-max:       3.5px;
+  /* ── Precision Field 粒子色 (Victor 确认 2026-03-11) ── */
+  --particle-primary:   #00C8E8;                    /* Medical Cyan — 主色 55% */
+  --particle-secondary: #5870E8;                    /* Deep Periwinkle — 辅色 30% */
+  --particle-pulse:     #9050C8;                    /* Scientific Violet — 脉冲 10% */
+  --particle-dust:      rgba(224, 240, 255, 0.18);  /* 白色微尘 5% */
+  --particle-line:      rgba(0, 200, 232, 0.09);    /* 连线，近隐 */
 }
 ```
 
-### Visual Behavior Spec
-- **Node types:** 70% small dots (1.5–2px), 25% medium (2–3px), 5% "pulse" nodes (3–3.5px with CSS @keyframes glow)
-- **Pulse animation:** select ~4 nodes randomly, apply subtle radial glow pulse every 3–5s
-- **Connections:** draw lines between nodes within `140px` radius; opacity = `1 - (distance / maxDist)` × 0.08
-- **Mouse interaction:** nodes within 100px radius gently repel from cursor (repulsion strength: 0.04)
-- **Canvas blend mode:** `multiply` is NOT used — canvas sits behind all content with `z-index: 0`
-- **Performance:** `requestAnimationFrame` loop; pause when `document.hidden`; cap at 60fps
+```js
+const PARTICLE = {
+  // ── 文字粒子（构成 slogan，无 DOM 文字节点）──
+  text: {
+    sampleStep:   4,           // 每 4px 采样一坐标点
+    size:         2.5,         // px
+    colors:      ['#00C8E8', '#5870E8', '#9050C8'],
+    colorRatio:  [0.55, 0.30, 0.15],
+    opacity:      0.88,
+    settleMs:     1200,
+    easing:      'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+    drift: {
+      amplitude:  2,           // ±2px 呼吸，永不完全静止
+      periodMs:   4500,        // 各粒子随机 3000–6000ms
+      mode:       'coordinated-wave', // 分区同相位，非独立随机抖动
+    },
+    scatter: {
+      radius:     80,          // 鼠标扰动半径
+      strength:   5,
+      returnMs:   800,         // 离开后重新汇聚耗时
+    },
+  },
+  // ── 环境粒子（背景漂浮，衬托文字层）──
+  ambient: {
+    count:       120,          // desktop；mobile: 60
+    sizeMin:     2,  sizeMax:  4,
+    opacityMin:  0.55, opacityMax: 0.75,
+    speed:       0.4,
+    colors:     ['#00C8E8', '#5870E8', '#9050C8'],
+    colorRatio: [0.55, 0.30, 0.15],
+    line: {
+      color:     'rgba(0, 200, 232, 0.09)',
+      maxDist:   130,
+    },
+    mouse:  { repelRadius: 100, strength: 0.05 },
+    pulse:  { count: 5, intervalMs: [3000, 6000] },
+  }
+};
+```
 
-### Mood Reference
-Think: electron microscope imagery, neural network diagrams, deep-sea bioluminescence — scientific wonder, not gaming.
+**颜色逻辑说明（给 Finn 参考）：**
+- `#00C8E8` — 降饱和医疗青，ECG/MRI 界面标准发光色，稳重可信
+- `#5870E8` — 深蓝偏紫，AI 运算的视觉语言（DeepMind 系），承接品牌 navy
+- `#9050C8` — 科学紫，Logo 过渡紫 `#7B2070` 的冷色提炼版，仅用于 pulse 节点
+- 三色同属冷色系，饱和度克制，整体读感稳重精密
 
 ---
 
-## 3. Typography System
+## 3. Home Page — Video Hero 层级结构
 
-### Font Stack
+**Victor 确认层级（2026-03-11）：**
+
+```
+z-100  Nav（position: fixed，全宽）
+z-10   Hero 内容区（eyebrow / CTA / subtext / trust logos）
+z-3    粒子 Canvas（position: absolute，仅 Hero section 范围）
+z-2    渐变蒙版（非均匀，加噪点）
+z-1    视频元素（autoplay muted loop playsinline）
+z-0    页面背景色
+```
+
+### Layer 1 — 视频背景
+
+```html
+<video class="hero-video" autoplay muted loop playsinline poster="hero-poster.jpg">
+  <source src="hero.mp4" type="video/mp4">
+</video>
+```
 
 ```css
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
-
-:root {
-  /* Families */
-  --font-display:   'Space Grotesk', system-ui, sans-serif;   /* H1–H3, hero */
-  --font-body:      'Inter', system-ui, sans-serif;            /* body, UI text */
-  --font-mono:      'JetBrains Mono', monospace;               /* stats, data badges */
-
-  /* Scale — Major Third (1.25) */
-  --text-xs:    0.75rem;    /* 12px — labels, captions */
-  --text-sm:    0.875rem;   /* 14px — secondary body */
-  --text-base:  1rem;       /* 16px — primary body */
-  --text-lg:    1.125rem;   /* 18px — lead paragraphs */
-  --text-xl:    1.25rem;    /* 20px */
-  --text-2xl:   1.5rem;     /* 24px — section subheadings */
-  --text-3xl:   1.875rem;   /* 30px — section headings */
-  --text-4xl:   2.25rem;    /* 36px */
-  --text-5xl:   3rem;       /* 48px — hero heading mobile */
-  --text-6xl:   3.75rem;    /* 60px — hero heading tablet */
-  --text-7xl:   4.5rem;     /* 72px — hero heading desktop */
-
-  /* Weights */
-  --font-light:   300;
-  --font-regular: 400;
-  --font-medium:  500;
-  --font-semibold:600;
-  --font-bold:    700;
-
-  /* Line heights */
-  --leading-tight:  1.15;
-  --leading-snug:   1.35;
-  --leading-normal: 1.6;
-  --leading-relaxed:1.75;
-
-  /* Letter spacing */
-  --tracking-tight:  -0.02em;   /* large headings */
-  --tracking-normal:  0em;
-  --tracking-wide:    0.06em;   /* eyebrow labels / caps */
-  --tracking-widest:  0.12em;   /* ALL-CAPS badges */
+.hero { position: relative; height: 100vh; overflow: hidden; }
+.hero-video {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; z-index: 1;
 }
 ```
 
-### Typographic Hierarchy
+> ⚠️ **视频内容要求（给制作方）：** 主色调必须深色/低亮度。明亮场景（白色医院走廊、强光手术室）会导致粒子消失。理想题材：暗室器械特写、数据可视化素材、低调照明的临床环境。
 
-| Role | Font | Size | Weight | Tracking | Use |
-|---|---|---|---|---|---|
-| Hero H1 | Space Grotesk | 72px → 48px mob | 700 | -0.02em | Single headline |
-| Section H2 | Space Grotesk | 48px → 32px mob | 600 | -0.01em | Section titles |
-| Card H3 | Space Grotesk | 24px | 600 | 0 | Card/feature titles |
-| Eyebrow | Inter | 12px | 500 | 0.12em | ALL-CAPS section labels |
-| Body Lead | Inter | 18px | 400 | 0 | Hero subtext |
-| Body | Inter | 16px | 400 | 0 | General copy |
-| Caption | Inter | 14px | 400 | 0 | Image captions, footnotes |
-| Data/Stat | JetBrains Mono | 14px | 500 | 0 | Numbers, percentages |
-| CTA Button | Inter | 15px | 600 | 0.04em | Button labels |
-
----
-
-## 4. Section-by-Section Layout & Visual Spec
-
----
-
-### 4.1 Canvas Background (Global Layer)
-
-**Type:** Fixed full-viewport `<canvas>` element  
-**z-index:** 0 (below all content)  
-**Visual:** Particle field as described in §2  
-**Radial vignette overlay:** `radial-gradient(ellipse at center, transparent 40%, rgba(4,13,27,0.8) 100%)` — draws eye to center
-
----
-
-### 4.2 Navigation
-
-**Layout:**
-```
-[Logo]                    [Services] [About] [Contact]    [Get Demo →]
-```
-- Fixed top, full width
-- Height: 64px desktop / 56px mobile
-- Background: `rgba(6,15,34,0.85)` with `backdrop-filter: blur(16px) saturate(180%)`
-- Bottom border: `1px solid var(--color-border)`
-- Logo: Wordmark "NEXTURE" in Space Grotesk 700 + small cyan accent mark on the "N" or beside it
-
-**Nav Links:** Inter 14px Medium, `--color-text-secondary` → hover `--color-primary-500` with 0.2s ease transition
-
-**CTA Button (Get Demo):**
-- Background: `var(--gradient-cta-btn)`
-- Border-radius: 8px
-- Padding: 10px 20px
-- Text: Inter 14px Semibold, white
-- Hover: `brightness(1.1)` + `box-shadow: 0 0 20px var(--color-primary-glow)`
-
-**Scroll behavior:** Slight background opacity increase to `0.95` on scroll > 20px
-
-**Mobile:** Hamburger icon → slide-down drawer, full-width links, CTA at bottom
-
----
-
-### 4.3 Hero Section
-
-**Layout:** Full viewport height (100vh), centered vertically  
-**Content alignment:** Center (text + CTA centered)
-
-```
-[EYEBROW — "MEDICAL AI · CAPSULE ENDOSCOPY"]
-[H1 — 2–3 line headline]
-[Subheading paragraph — 1–2 sentences]
-[Primary CTA]  [Secondary CTA]
-[Trusted by logos strip]
-```
-
-**H1 Copy Direction:**  
-"Precision at the  
-Speed of AI"  
-*(gradient text on key word — e.g., "AI" uses `--gradient-text`)*
-
-**Eyebrow:** ALL-CAPS, `--color-primary-500`, letter-spacing 0.12em, small cyan divider line left of text (3px × 20px)
-
-**Subheading:** Inter 18px, `--color-text-secondary`, max-width 560px, line-height 1.75
-
-**CTAs:**
-- Primary: gradient button (same as Nav CTA), larger: padding 14px 32px, border-radius 10px
-- Secondary: Ghost button — `border: 1px solid var(--color-border-strong)`, text `--color-primary-500`, hover: background `var(--color-primary-glow)`
-
-**Trust Strip (below CTAs):**  
-`—— Trusted by leading hospitals ——` in `--color-text-muted`, followed by 4–5 greyscale partner/hospital logos at 40% opacity → hover 100%
-
-**Background accent:**  
-- Subtle radial glow behind H1: `radial-gradient(ellipse 600px 400px at 50% 40%, rgba(0,212,232,0.06), transparent)`
-- Optional: faint animated circular scanner ring (CSS @keyframes, scale + fade, 4s loop) centered behind the headline
-
----
-
-### 4.4 Services Section
-
-**Layout:** Centered content, max-width 1200px  
-**Structure:**
-```
-[Eyebrow] [H2] [Body intro]
-[3-column grid of feature cards]
-```
-
-**Grid:** 3 columns desktop → 1 column mobile, gap 24px
-
-**Feature Card Anatomy:**
-```
-[Icon — 40×40 cyan gradient SVG]
-[Card Title — H3]
-[Description — Body 15px]
-[Learn more → link]
-```
-
-- Background: `var(--color-bg-surface)`
-- Border: `1px solid var(--color-border)`
-- Border-radius: 16px
-- Padding: 32px
-- Top edge highlight: `var(--gradient-card-edge)` as `::before` pseudo-element
-- Hover: `border-color: var(--color-border-strong)`, `box-shadow: 0 8px 32px rgba(0,212,232,0.08)`, card lifts `translateY(-4px)` — 0.3s ease
-
-**Suggested 3 Services:**
-1. AI-Powered Lesion Detection
-2. Automated Classification & Reporting
-3. Seamless Workflow Integration
-
-**Icon style:** Monoline SVG, stroke `url(#cyan-gradient)`, 2px stroke-width
-
----
-
-### 4.5 About Section
-
-**Layout:** 2-column split, max-width 1200px  
-**Left:** Text block (60% width)  
-**Right:** Visual element (40% width)
-
-```
-LEFT                                RIGHT
-[Eyebrow]                          [Stats card cluster]
-[H2]
-[Body copy — 2–3 paragraphs]
-[Secondary CTA — "Our Research"]
-```
-
-**Stats cards (right column):**  
-3 stacked/grid cards, each showing one key metric:
-```
-[Number — JetBrains Mono 48px bold, gradient text]
-[Label — Inter 14px, --color-text-secondary]
-```
-Example: `98.2%` / Sensitivity Rate · `<3min` / Avg. Analysis Time · `50K+` / Cases Analyzed
-
-Card style: same as Services card but compact, accent left border `3px solid var(--color-primary-500)`
-
-**Body copy tone:** Confident, peer-reviewed language. No marketing fluff.
-
-**Mobile:** Stack vertically, stats above text
-
----
-
-### 4.6 Contact Section
-
-**Layout:** Centered, max-width 640px  
-**Structure:**
-```
-[Eyebrow — "GET IN TOUCH"]
-[H2 — "Ready to Transform Your Endoscopy Workflow?"]
-[Subtext]
-[Form: Name | Email | Hospital/Institution | Message]
-[Submit CTA]
-```
-
-**Form field style:**
-- Background: `var(--color-bg-elevated)`
-- Border: `1px solid var(--color-border)`
-- Border-radius: 8px
-- Padding: 12px 16px
-- Font: Inter 15px, `--color-text-primary`
-- Label: Inter 13px Medium, `--color-text-secondary`, above field
-- Focus: `border-color: var(--color-primary-500)`, `box-shadow: 0 0 0 3px var(--color-primary-glow)`
-
-**Section background:**  
-Slightly lighter surface `var(--color-bg-surface)` with full-bleed, creating a visual break from About
-
----
-
-### 4.7 Footer
-
-**Layout:** 3-column, max-width 1200px  
-**Structure:**
-```
-[Logo + tagline]    [Links: Company/Legal]    [Links: Product/Contact]
-─────────────────────────────────────────────────────────────
-© 2025 Nexture Limited · All rights reserved · Christchurch, NZ
-```
-
-- Background: `var(--color-bg-subtle)` — slightly distinct from page bg
-- Top border: `1px solid var(--color-border)`
-- Text: `--color-text-muted`, hover links `--color-text-secondary`
-- Tagline: "Pushing the Boundaries of AI"
-
-**Mobile:** Single column stack, logo + tagline → links → copyright
-
----
-
-## 5. Spacing & Layout System
+### Layer 2 — 渐变蒙版（非均匀 + 噪点质感）
 
 ```css
-:root {
-  /* Base unit: 4px */
-  --space-1:   4px;
-  --space-2:   8px;
-  --space-3:   12px;
-  --space-4:   16px;
-  --space-5:   20px;
-  --space-6:   24px;
-  --space-8:   32px;
-  --space-10:  40px;
-  --space-12:  48px;
-  --space-16:  64px;
-  --space-20:  80px;
-  --space-24:  96px;
-  --space-32:  128px;
-
-  /* Section vertical padding */
-  --section-py-desktop: var(--space-24);   /* 96px top/bottom */
-  --section-py-mobile:  var(--space-16);   /* 64px top/bottom */
-
-  /* Max widths */
-  --container-sm:  640px;
-  --container-md:  768px;
-  --container-lg:  1024px;
-  --container-xl:  1200px;
-  --container-2xl: 1400px;
-
-  /* Border radii */
-  --radius-sm:  6px;
-  --radius-md:  10px;
-  --radius-lg:  16px;
-  --radius-xl:  24px;
-  --radius-full: 9999px;
-
-  /* Shadows */
-  --shadow-sm:  0 1px 3px rgba(0,0,0,0.4);
-  --shadow-md:  0 4px 16px rgba(0,0,0,0.5);
-  --shadow-lg:  0 8px 32px rgba(0,0,0,0.6);
-  --shadow-glow-cyan:   0 0 24px rgba(0,212,232,0.25);
-  --shadow-glow-indigo: 0 0 24px rgba(91,110,245,0.25);
-
-  /* Transitions */
-  --transition-fast:   0.15s ease;
-  --transition-base:   0.25s ease;
-  --transition-slow:   0.4s ease;
-  --transition-spring: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+.hero-overlay {
+  position: absolute; inset: 0; z-index: 2;
+  /* 主渐变：顶轻底重，让视频顶部呼吸，底部 CTA 区清晰 */
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(6, 6, 14, 0.30)  0%,
+      rgba(6, 6, 14, 0.52) 45%,
+      rgba(6, 6, 14, 0.82) 100%
+    );
+}
+/* 噪点质感层（去除数字屏保感，增加电影颗粒感）*/
+.hero-overlay::after {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.05;   /* 4–5%，肉眼几乎不可见，质感决定性 */
+  mix-blend-mode: overlay;
 }
 ```
 
----
-
-## 6. Mobile Visual Adaptation
-
-### Breakpoints
-```css
-/* Tailwind-aligned */
---bp-sm:  640px;
---bp-md:  768px;
---bp-lg:  1024px;
---bp-xl:  1280px;
-```
-
-### Key Adaptations by Section
-
-| Section | Desktop | Mobile |
-|---|---|---|
-| Nav | Horizontal links + CTA | Hamburger → slide drawer |
-| Hero | Centered, vh100, large H1 72px | Centered, H1 40–48px, reduced padding |
-| Services | 3-col grid | 1-col stack, card full-width |
-| About | 2-col split | 1-col, stats grid (2×2) above text |
-| Contact | 640px centered form | Full-width, 16px horizontal padding |
-| Footer | 3-col | 1-col, centered text |
-
-### Typography Scaling
-- H1: 72px → 40px (clamp: `clamp(2.5rem, 8vw, 4.5rem)`)
-- H2: 48px → 28px (`clamp(1.75rem, 6vw, 3rem)`)
-- Body: always 16px minimum (WCAG readability)
-
-### Particle System — Mobile
-- Reduce count: 80 → 35
-- Disable mouse interaction (touch devices)
-- Maintain same color/opacity ratios
-
-### Touch Targets
-- All interactive elements: min 44×44px
-- Form fields: min height 48px
-- Buttons: min height 48px
-
-### Specific Visual Notes
-- Remove hover-state decorations (no `translateY` cards on touch)
-- Reduce glow effects by 40% for performance
-- Gradient text on H1 retained (CSS only, no performance impact)
-- Trust logo strip: horizontal scroll on mobile (overflow-x: auto, scroll-snap)
-- Stats in About: 2×2 grid instead of 3-stack
-
----
-
-## 7. Animation & Motion Guidelines
+### Layer 3 — 粒子 Canvas
 
 ```css
-/* Scroll-reveal: elements enter from below */
-.reveal {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+.particle-canvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  z-index: 3;
+  pointer-events: none;  /* 点击穿透，不阻挡 CTA */
 }
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Stagger children in grids */
-.card:nth-child(1) { transition-delay: 0ms; }
-.card:nth-child(2) { transition-delay: 100ms; }
-.card:nth-child(3) { transition-delay: 200ms; }
 ```
 
-**Rules:**
-- Motion only serves clarity — no animation for decoration alone
-- Reduced motion: `@media (prefers-reduced-motion: reduce)` disables all transitions and particle animation
-- Particle canvas pauses when tab is not visible (`visibilitychange` event)
-- Hero entrance: H1 fades up first (0ms), subheading (100ms), CTAs (200ms), trust strip (400ms)
+**粒子入场时序：**
 
----
-
-## 8. Component Quick-Reference for Finn
-
-| Component | Key Tokens |
+| 时间 | 事件 |
 |---|---|
-| Primary Button | `--gradient-cta-btn`, `--radius-md`, Inter 600, white text, hover `brightness(1.1)` + `--shadow-glow-cyan` |
-| Ghost Button | `border: 1px solid --color-border-strong`, `--color-primary-500`, hover `--color-primary-glow` bg |
-| Service Card | `--color-bg-surface`, `--color-border`, `--radius-lg`, hover `translateY(-4px)` + `--shadow-glow-cyan` |
-| Stats Card | `--color-bg-surface`, left `3px solid --color-primary-500`, `--font-mono` for number |
-| Form Input | `--color-bg-elevated`, `--color-border`, focus `--color-primary-500` border + `--color-primary-glow` ring |
-| Nav Bar | `backdrop-filter: blur(16px)`, `rgba(6,15,34,0.85)` bg, `--color-border` bottom |
-| Eyebrow Label | `--color-primary-500`, `--tracking-widest`, `--text-xs`, uppercase, left accent line |
-| Gradient Text | `background: --gradient-text`, `-webkit-background-clip: text`, `-webkit-text-fill-color: transparent` |
+| 0ms | 视频播放，纯净全屏，蒙版不可见 |
+| 300ms | 蒙版淡入（opacity 0→1，0.6s ease） |
+| 800ms | 粒子从视口四边随机位置生成 |
+| 800–2000ms | 粒子飞向字形目标坐标（settleMs: 1200） |
+| 2000ms | 文字成形，呼吸运动开始 |
+| 2200ms | 副标题行 fadeUp 淡入 |
+| 2500ms | CTA 按钮 spring 弹入 |
+| 2800ms | Trust logos 淡入 |
+
+> **⚠️ 无 DOM 文字节点：** Slogan 完全由粒子构成，无 `<h1>` 等字体渲染。无障碍处理：`<canvas aria-label="Pushing the Boundaries of AI" role="img">`
+
+### Hero 布局
+
+```
+100vh 垂直居中
+  [eyebrow — 13px，#F040A0，letter-spacing 0.08em]
+  MEDICAL AI · CAPSULE ENDOSCOPY
+  
+  [粒子 slogan — clamp(2.5rem, 7vw, 4.5rem)]
+  Pushing the Boundaries of AI
+  
+  [subtext — 18px system-ui，--color-text-secondary，max-width 520px]
+  
+  [Get Demo ▶]   [Learn More →]
+  
+  ── Trusted by ──
+  [Ministry of Awesome · UoA · NVIDIA · Google Cloud · AWS]
+  
+  [↓ scroll indicator — 底部居中，细线脉冲动画]
+```
+
+**Mobile (≤768px)：**
+- 粒子 slogan 字号：`clamp(1.6rem, 8.5vw, 2.4rem)`，重新采样像素坐标
+- 环境粒子 count: 60，关闭鼠标扰动
+- 视频保留，poster 图作 loading fallback
 
 ---
 
-*Design Spec v1.0 — Aria · For implementation by Finn · Queries via q*
+## 4. 内页页头（Product / Team / Media / Contact）
+
+无视频，无粒子，品牌一致。
+
+```css
+.inner-header {
+  height: 220px;
+  padding-top: 64px;
+  background: var(--color-bg-subtle);
+  background-image: var(--gradient-brand-soft);
+  border-left: 4px solid transparent;
+  border-image: var(--gradient-brand) 1;
+  display: flex; flex-direction: column;
+  justify-content: flex-end;
+  padding-inline: clamp(24px, 5vw, 80px);
+  padding-bottom: 40px;
+}
+.inner-header .eyebrow {
+  color: var(--color-primary-400);
+  font-size: 0.75rem; letter-spacing: 0.08em;
+  text-transform: uppercase; margin-bottom: 8px;
+}
+.inner-header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 5vw, 3rem);
+  font-weight: 700; letter-spacing: -0.02em;
+  color: var(--color-text-primary);
+}
+@media (max-width: 768px) { .inner-header { height: 160px; } }
+```
+
+---
+
+## 5. Navigation（shared.css — 全页面引用）
+
+```css
+.nav {
+  position: fixed; top: 0; width: 100%; height: 64px; z-index: 100;
+  background: rgba(8, 8, 28, 0.88);
+  backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1px solid var(--color-border);
+  transition: background 0.25s ease;
+}
+.nav.scrolled { background: rgba(8, 8, 28, 0.97); }
+
+@media (max-width: 768px) {
+  /* 去除 backdrop-filter，避免与粒子 canvas GPU 层叠加掉帧 */
+  .nav { background: rgba(8, 8, 28, 0.97); backdrop-filter: none; }
+}
+```
+
+Logo: Space Grotesk 700，`--color-text-primary` + `▸` in `var(--brand-pink)`  
+链接: system-ui 14px，`--color-text-secondary` → hover `--color-primary-400`，0.2s ease  
+CTA "Get Demo": `background: var(--gradient-brand)`，8px radius，10px 20px，white 600
+
+---
+
+## 6. Spacing & Component Tokens
+
+```css
+:root {
+  --space-2:4px; --space-4:16px; --space-6:24px; --space-8:32px;
+  --space-10:40px; --space-12:48px; --space-16:64px; --space-24:96px;
+  --section-py: clamp(64px, 8vw, 96px);
+  --container-xl: 1200px; --container-sm: 640px;
+  --radius-sm:6px; --radius-md:10px; --radius-lg:16px; --radius-full:9999px;
+  --shadow-glow-primary:   0 0 28px rgba(232, 0, 90, 0.32);
+  --shadow-glow-secondary: 0 0 24px rgba(45, 50, 130, 0.30);
+  --transition-fast: 0.15s ease; --transition-base: 0.25s ease;
+  --transition-spring: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Typography */
+  --font-display: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --font-body:    system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono:    ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
+  --text-hero:    clamp(2.5rem, 7vw, 4.5rem);
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-weight: 600 700; font-display: swap;
+  src: url('fonts/space-grotesk-600-700.woff2') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-00FF;
+}
+```
+
+| Component | Tokens |
+|---|---|
+| Primary Button | `--gradient-brand`，`--radius-md`，white 600，hover `brightness(1.1)` + `--shadow-glow-primary` |
+| Ghost Button | `border: 1px solid --color-border-strong`，`--color-primary-400`，hover `--color-primary-glow` bg |
+| Card | `--color-bg-surface` + `--gradient-card-edge` `::before`，`--color-border`，`--radius-lg`，hover `translateY(-4px)` |
+| Stats Number | `--font-mono`，`--gradient-text` clip，clamp(2rem, 4vw, 3rem) |
+| Form Input | `--color-bg-elevated`，`--color-border`，focus `--brand-pink` border + 3px `--color-primary-glow` ring |
+| Eyebrow | `--color-primary-400`，uppercase，`letter-spacing: 0.08em`，左侧 `3×20px` 品牌色竖线 |
+
+---
+
+## 7. Motion & Accessibility
+
+```css
+.reveal {
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+.reveal.visible { opacity: 1; transform: none; }
+.reveal:nth-child(2) { transition-delay: 100ms; }
+.reveal:nth-child(3) { transition-delay: 200ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, .reveal { transition: none !important; animation: none !important; }
+  /* Particle canvas: 停止所有动画，渲染静态点阵 */
+}
+```
+
+- Particle canvas：`document.hidden` 时暂停 rAF，`visibilitychange` 时恢复
+- Touch 检测：`navigator.maxTouchPoints > 0` → 关闭鼠标扰动
+- 无障碍：`<canvas role="img" aria-label="Pushing the Boundaries of AI">`
+
+---
+
+*Design Spec v2 Final — Aria · Sprint-02 · Victor 确认版 · For Finn · Queries via q*
