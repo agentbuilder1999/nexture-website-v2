@@ -1,0 +1,63 @@
+# Medical AI - Cloud GPU Environment
+# 用于云端训练/推理服务器，非 Mac 本地
+
+# Core framework
+torch>=2.2.0
+torchvision>=0.17.0
+torchaudio>=2.2.0
+
+# Detection
+ultralytics>=8.2.0  # YOLOv8-x + YOLOv11
+
+# Segmentation
+git+https://github.com/facebookresearch/sam2.git
+
+# Super Resolution
+realesrgan>=0.3.0
+basicsr>=1.4.2
+# SwinIR: manual install from https://github.com/JingyunLiang/SwinIR
+
+# Medical imaging
+monai[all]>=1.3.0
+
+# Image processing
+opencv-python-headless>=4.9.0
+scikit-image>=0.22.0
+Pillow>=10.2.0
+numpy>=1.26.0
+scipy>=1.12.0
+
+# Feature extraction
+timm>=0.9.0
+open_clip_torch  # BiomedCLIP
+
+# Inference optimization
+onnx>=1.16.0
+onnxruntime-gpu>=1.17.0
+# tensorrt: install via NVIDIA NGC, not pip
+# openvino: pip install openvino (x86 target only)
+
+# MLOps
+wandb>=0.16.0
+clearml>=1.14.0
+dvc>=3.30.0
+tensorboard>=2.15.0
+
+# Annotation SDKs
+labelme>=5.3.0
+roboflow>=1.1.0
+
+# API / backend
+fastapi>=0.110.0
+uvicorn[standard]>=0.27.0
+pydantic>=2.6.0
+sqlalchemy>=2.0.0
+aiofiles>=23.2.0
+
+# Report generation (use ollama endpoint, no local install)
+
+# Dev tools
+pytest>=8.0.0
+black>=24.0.0
+ruff>=0.3.0
+mypy>=1.8.0
