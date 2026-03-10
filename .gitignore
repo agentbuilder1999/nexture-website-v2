@@ -1,0 +1,6 @@
+datasets/
+*.zip
+*.tar.gz
+*.mp4
+*.part
+.DS_Store
