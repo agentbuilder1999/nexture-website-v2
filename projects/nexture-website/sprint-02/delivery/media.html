@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Media — Nexture</title>
+<meta name="description" content="Press coverage, publications, and resources from Nexture.">
+<link rel="stylesheet" href="shared.css">
+<style>
+.hero{background:linear-gradient(135deg,#08081c 0%,#0e0e28 100%);padding:120px 24px 80px}
+.media-card{background:var(--color-bg-surface);border:1px solid var(--color-border);border-radius:12px;padding:24px;transition:all 0.3s ease}
+.media-card:hover{border-color:var(--color-border-strong);box-shadow:0 0 20px var(--color-primary-glow)}
+.media-date{font-size:0.8125rem;color:var(--color-text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em}
+.media-title{font-weight:600;color:var(--color-text-primary);margin-bottom:8px}
+.media-publication{font-size:0.875rem;color:var(--color-primary-500)}
+.media-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin:40px 0}
+</style>
+</head>
+<body data-page="media">
+
+<nav role="navigation" aria-label="Main navigation">
+<a href="/" class="nav__logo">NEXTURE</a>
+<button class="nav__toggle" aria-expanded="false" aria-controls="nav-menu">☰</button>
+<ul id="nav-menu" class="nav__links">
+<li><a href="/" data-nav="home">Home</a></li>
+<li><a href="/product.html" data-nav="product">Product</a></li>
+<li><a href="/team.html" data-nav="team">Team</a></li>
+<li><a href="/media.html" data-nav="media">Media</a></li>
+<li><a href="/contact.html" data-nav="contact">Contact</a></li>
+</ul>
+</nav>
+
+<main>
+<section class="hero">
+<h1>In the Media</h1>
+<p>Latest coverage, publications, and resources featuring Nexture's AI innovations.</p>
+</section>
+
+<section>
+<h2>Featured Press</h2>
+<div class="media-grid">
+<div class="media-card">
+<div class="media-date">Mar 2026</div>
+<div class="media-publication">NZ Entrepreneur</div>
+<div class="media-title">Nexture: AI Transforms Capsule Endoscopy Diagnosis</div>
+</div>
+<div class="media-card">
+<div class="media-date">Feb 2026</div>
+<div class="media-publication">Medtech Insider</div>
+<div class="media-title">Clinical Validation Results: 98.2% Accuracy Achieved</div>
+</div>
+<div class="media-card">
+<div class="media-date">Jan 2026</div>
+<div class="media-publication">RegenerationHQ</div>
+<div class="media-title">Investment Round: Nexture Secures Funding for Global Expansion</div>
+</div>
+<div class="media-card">
+<div class="media-date">Dec 2025</div>
+<div class="media-publication">Medical AI Weekly</div>
+<div class="media-title">Podcast Interview: The Future of Diagnostic AI</div>
+</div>
+<div class="media-card">
+<div class="media-date">Nov 2025</div>
+<div class="media-publication">The Protocol</div>
+<div class="media-title">Deep Dive: How Nexture Improves Clinician Efficiency by 90%</div>
+</div>
+</div>
+</section>
+
+<section>
+<h2>Research & Publications</h2>
+<p>Our research is peer-reviewed and published in leading medical and AI journals. <a href="#" style="color:var(--color-primary-500)">View full list →</a></p>
+</section>
+</main>
+
+<footer role="contentinfo">
+<p>&copy; 2026 Nexture Limited. All rights reserved. Christchurch, New Zealand.</p>
+</footer>
+
+<script src="shared.js"></script>
+</body>
+</html>

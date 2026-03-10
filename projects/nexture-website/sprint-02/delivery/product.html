@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product — Nexture</title>
+<meta name="description" content="TheraSeus™ — Nexture's AI-powered capsule endoscopy analysis platform for clinicians.">
+<link rel="stylesheet" href="shared.css">
+<style>
+.hero{background:linear-gradient(135deg,#08081c 0%,#0e0e28 100%);padding:120px 24px 80px}
+.hero h1{margin-bottom:16px}
+.hero p{max-width:640px}
+.feature-section{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;margin:60px 0}
+@media(max-width:768px){.feature-section{grid-template-columns:1fr}}
+.feature-image{width:100%;height:300px;background:linear-gradient(135deg,rgba(232,0,90,0.1),rgba(45,50,130,0.1));border-radius:12px}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin:60px 0}
+.metric{text-align:center;padding:24px}
+.metric-value{font-family:ui-monospace;font-size:2.5rem;font-weight:700;background:var(--gradient-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
+.metric-label{font-size:0.875rem;color:var(--color-text-secondary)}
+@media(max-width:768px){.metrics{grid-template-columns:1fr}.feature-section{gap:24px}}
+</style>
+</head>
+<body data-page="product">
+
+<nav role="navigation" aria-label="Main navigation">
+<a href="/" class="nav__logo">NEXTURE</a>
+<button class="nav__toggle" aria-expanded="false" aria-controls="nav-menu">☰</button>
+<ul id="nav-menu" class="nav__links">
+<li><a href="/" data-nav="home">Home</a></li>
+<li><a href="/product.html" data-nav="product">Product</a></li>
+<li><a href="/team.html" data-nav="team">Team</a></li>
+<li><a href="/media.html" data-nav="media">Media</a></li>
+<li><a href="/contact.html" data-nav="contact">Contact</a></li>
+</ul>
+</nav>
+
+<main>
+<section class="hero">
+<h1>TheraSeus™</h1>
+<p>AI-powered capsule endoscopy analysis, seamlessly integrated into your clinical workflow.</p>
+</section>
+
+<section>
+<h2>Why TheraSeus</h2>
+<div class="metrics">
+<div class="metric">
+<div class="metric-value">90%</div>
+<div class="metric-label">Time Saved</div>
+</div>
+<div class="metric">
+<div class="metric-value">98.2%</div>
+<div class="metric-label">Accuracy</div>
+</div>
+<div class="metric">
+<div class="metric-value">&lt;$150</div>
+<div class="metric-label">Per Case</div>
+</div>
+</div>
+
+<div class="feature-section">
+<div>
+<h3>Intelligent Frame Filtering</h3>
+<p>Removes non-diagnostic frames automatically, reducing review time from hours to minutes without missing critical findings.</p>
+</div>
+<div class="feature-image"></div>
+</div>
+
+<div class="feature-section">
+<div class="feature-image"></div>
+<div>
+<h3>Automated Detection</h3>
+<p>Powered by deep learning, TheraSeus identifies bleeding sites, polyps, and other pathologies with clinical-grade confidence scoring.</p>
+</div>
+</div>
+
+<div class="feature-section">
+<div>
+<h3>Structured Reporting</h3>
+<p>Every analysis generates a comprehensive, PACS-compatible report with annotated frames and severity indicators.</p>
+</div>
+<div class="feature-image"></div>
+</div>
+
+<section style="text-align:center;margin-top:80px">
+<h2>Ready to Revolutionize Your Endoscopy Department?</h2>
+<p style="margin-bottom:40px">Join hospitals worldwide using TheraSeus to improve diagnostic accuracy and clinician efficiency.</p>
+<a href="/contact.html" class="btn btn--primary">Request a Demo</a>
+</section>
+</section>
+</main>
+
+<footer role="contentinfo">
+<p>&copy; 2026 Nexture Limited. All rights reserved. Christchurch, New Zealand.</p>
+</footer>
+
+<script src="shared.js"></script>
+</body>
+</html>

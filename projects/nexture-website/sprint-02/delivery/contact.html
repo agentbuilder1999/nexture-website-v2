@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Nexture</title>
+<meta name="description" content="Get in touch with the Nexture team.">
+<link rel="stylesheet" href="shared.css">
+<style>
+.hero{background:linear-gradient(135deg,#08081c 0%,#0e0e28 100%);padding:120px 24px 80px}
+.contact-container{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-top:60px}
+.form-group{margin-bottom:24px}
+label{display:block;font-size:0.875rem;font-weight:500;color:var(--color-text-secondary);margin-bottom:8px}
+input,textarea{width:100%;padding:12px 16px;background:var(--color-bg-elevated);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text-primary);font-family:inherit;font-size:0.9375rem;transition:border-color 0.2s,box-shadow 0.2s}
+input:focus,textarea:focus{outline:none;border-color:var(--color-primary-500);box-shadow:0 0 0 3px var(--color-primary-glow)}
+textarea{resize:vertical;min-height:120px}
+.form-submit{width:100%;margin-top:24px}
+.contact-info h3{margin-bottom:16px;color:var(--color-text-primary)}
+.contact-info p{font-size:0.95rem;color:var(--color-text-secondary);margin-bottom:24px}
+.contact-info a{color:var(--color-primary-500);text-decoration:none}
+@media(max-width:768px){.contact-container{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-page="contact">
+
+<nav role="navigation" aria-label="Main navigation">
+<a href="/" class="nav__logo">NEXTURE</a>
+<button class="nav__toggle" aria-expanded="false" aria-controls="nav-menu">☰</button>
+<ul id="nav-menu" class="nav__links">
+<li><a href="/" data-nav="home">Home</a></li>
+<li><a href="/product.html" data-nav="product">Product</a></li>
+<li><a href="/team.html" data-nav="team">Team</a></li>
+<li><a href="/media.html" data-nav="media">Media</a></li>
+<li><a href="/contact.html" data-nav="contact">Contact</a></li>
+</ul>
+</nav>
+
+<main>
+<section class="hero">
+<h1>Get in Touch</h1>
+<p>Ready to transform your endoscopy department? Let's talk.</p>
+</section>
+
+<section>
+<div class="contact-container">
+<form onsubmit="alert('Thank you! We will be in touch soon.');return false;">
+<div class="form-group">
+<label for="name">Name</label>
+<input type="text" id="name" name="name" required>
+</div>
+<div class="form-group">
+<label for="email">Email</label>
+<input type="email" id="email" name="email" required>
+</div>
+<div class="form-group">
+<label for="institution">Hospital / Institution</label>
+<input type="text" id="institution" name="institution">
+</div>
+<div class="form-group">
+<label for="message">Message</label>
+<textarea id="message" name="message" required></textarea>
+</div>
+<button type="submit" class="btn btn--primary form-submit">Send Message</button>
+</form>
+
+<div class="contact-info">
+<h3>Nexture Limited</h3>
+<p>Christchurch, New Zealand</p>
+<p><a href="mailto:hello@nexture.nz">hello@nexture.nz</a></p>
+<p style="margin-top:40px;color:var(--color-text-muted);font-size:0.875rem">
+We're committed to responding to all inquiries within 24 hours during business days.
+</p>
+</div>
+</div>
+</section>
+</main>
+
+<footer role="contentinfo">
+<p>&copy; 2026 Nexture Limited. All rights reserved. Christchurch, New Zealand.</p>
+</footer>
+
+<script src="shared.js"></script>
+</body>
+</html>

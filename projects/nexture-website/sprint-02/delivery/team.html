@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team — Nexture</title>
+<meta name="description" content="Meet the team driving innovation in medical AI.">
+<link rel="stylesheet" href="shared.css">
+<style>
+.hero{background:linear-gradient(135deg,#08081c 0%,#0e0e28 100%);padding:120px 24px 80px}
+.pillar{padding:32px;background:var(--color-bg-surface);border:1px solid var(--color-border);border-radius:12px;transition:all 0.3s ease}
+.pillar:hover{border-color:var(--color-border-strong);box-shadow:0 0 20px var(--color-primary-glow)}
+.pillar h3{color:var(--color-text-primary);margin-bottom:12px}
+.pillar p{font-size:0.95rem;margin:0}
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin:40px 0}
+</style>
+</head>
+<body data-page="team">
+
+<nav role="navigation" aria-label="Main navigation">
+<a href="/" class="nav__logo">NEXTURE</a>
+<button class="nav__toggle" aria-expanded="false" aria-controls="nav-menu">☰</button>
+<ul id="nav-menu" class="nav__links">
+<li><a href="/" data-nav="home">Home</a></li>
+<li><a href="/product.html" data-nav="product">Product</a></li>
+<li><a href="/team.html" data-nav="team">Team</a></li>
+<li><a href="/media.html" data-nav="media">Media</a></li>
+<li><a href="/contact.html" data-nav="contact">Contact</a></li>
+</ul>
+</nav>
+
+<main>
+<section class="hero">
+<h1>Our Team</h1>
+<p>A global team of clinicians, engineers, and researchers united by a mission to transform medical imaging.</p>
+</section>
+
+<section>
+<h2>Our Values</h2>
+<div class="pillars">
+<div class="pillar">
+<h3>Clinical Excellence</h3>
+<p>Every model is rigorously validated against clinical standards before deployment. Accuracy matters.</p>
+</div>
+<div class="pillar">
+<h3>Innovation First</h3>
+<p>We push the boundaries of what's possible in AI and medical imaging, collaborating with leading institutions worldwide.</p>
+</div>
+<div class="pillar">
+<h3>Transparency</h3>
+<p>Our models are interpretable. Clinicians understand why TheraSeus makes its recommendations.</p>
+</div>
+<div class="pillar">
+<h3>Patient Impact</h3>
+<p>Every decision we make is guided by one principle: better outcomes for patients.</p>
+</div>
+<div class="pillar">
+<h3>Ethical AI</h3>
+<p>We're committed to responsible innovation, ensuring our technology benefits all communities equitably.</p>
+</div>
+</div>
+</section>
+</main>
+
+<footer role="contentinfo">
+<p>&copy; 2026 Nexture Limited. All rights reserved. Christchurch, New Zealand.</p>
+</footer>
+
+<script src="shared.js"></script>
+</body>
+</html>
