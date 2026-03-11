@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json.schemastore.org/generic",
+  "version": "1.0.0",
+  "updated": "2026-03-11",
+  "projects": [
+    {
+      "name": "nexture-website",
+      "type": "website",
+      "topicId": 368,
+      "status": "active",
+      "sprint": "Sprint-02",
+      "description": "nexture.nz landing page redesign — multi-page site with structured content schema, copy, and visual delivery.",
+      "created": "2026-03-10",
+      "agents": {
+        "auto": ["nova", "aria", "finn"],
+        "mention": ["atlas", "rex", "sage"]
+      },
+      "brief_updated": "2026-03-11"
+    },
+    {
+      "name": "theraseus",
+      "type": "ai-platform",
+      "topicId": 369,
+      "status": "active",
+      "sprint": "Sprint-02",
+      "description": "TheraSeus AI pipeline — capsule endoscopy frame filtering, quality scoring, multi-label classification (EfficientNet), and bleeding/lesion detection.",
+      "created": "2026-03-10",
+      "agents": {
+        "auto": ["nova", "atlas"],
+        "mention": ["rex", "sage"]
+      },
+      "brief_updated": "2026-03-11"
+    }
+  ]
+}

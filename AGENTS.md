@@ -161,3 +161,8 @@ q 处理任何任务的强制顺序：
 - ❌ 跳过 code review 使用 q 自己写的代码
 - ❌ q 自行重启 Gateway 或执行系统操作
 - ❌ 忽略 token 成本，无限讨论或全量加载上下文
+
+## Telegram Topic 消息规范（2026-03-11）
+- 禁止用 default bot token 在其他 agent 专属 topic（10/12/16/18）发消息
+- 内部任务派发唯一方式：`openclaw agent --agent <id> --message`
+- Topic 里只有 Victor 或该 topic 对应的 agent bot 才应该发消息
