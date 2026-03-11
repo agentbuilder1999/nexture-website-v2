@@ -7,15 +7,16 @@
 <meta name="description" content="Nexture's intelligent imaging platform automatically detects bleeding, lesions, and abnormalities in capsule endoscopy footage.">
 <link rel="stylesheet" href="shared.css">
 <style>
-.hero{position:relative;height:100vh;overflow:hidden;margin-top:-64px}
+.hero{position:fixed;top:0;left:0;right:0;width:100vw;height:100vh;margin:0;padding:0;overflow:hidden;z-index:1}
 .hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,16,40,0.65)0%,rgba(14,16,40,0.4)50%,rgba(14,16,40,0.75)100%);z-index:2}
 #particles{position:absolute;inset:0;z-index:3}
-.hero-content{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:4}
-.hero h1{color:var(--color-text-primary);margin-bottom:16px}
-.hero-subtitle{font-size:1.125rem;max-width:560px;color:var(--color-text-secondary);margin-bottom:40px;line-height:1.75}
+.hero-content{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:4;padding:0 20px;width:100vw}
+.hero h1{color:var(--color-text-primary);margin-bottom:16px;font-size:clamp(1.5rem,6vw,4.5rem)}
+.hero-subtitle{font-size:clamp(0.875rem,3vw,1.125rem);max-width:560px;color:var(--color-text-secondary);margin-bottom:40px;line-height:1.75;width:100%;text-align:center}
 .cta-group{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
 .trust-strip{font-size:0.875rem;color:var(--color-text-muted)}
+.main-content{position:relative;z-index:1;margin-top:100vh}
 .services{background:linear-gradient(180deg,transparent 0%,rgba(232,0,90,0.02)100%)}
 .service-card{background:var(--color-bg-surface);border:1px solid var(--color-border);border-radius:12px;padding:32px;transition:all 0.3s ease}
 .service-card:hover{border-color:var(--color-border-strong);box-shadow:0 0 20px var(--color-primary-glow);transform:translateY(-4px)}
@@ -23,8 +24,9 @@
 .service-card p{font-size:0.95rem;margin-bottom:16px}
 .service-link{color:var(--color-primary-500);text-decoration:none;font-weight:500;font-size:0.9rem;transition:color 0.2s}
 .service-link:hover{color:var(--color-primary-400)}
-@media(max-width:768px){.cta-group{flex-direction:column;align-items:center}
-.btn{width:100%;text-align:center}}
+@media(max-width:768px){.cta-group{flex-direction:column;align-items:center;width:100%}
+.btn{width:100%;text-align:center}
+.hero h1{font-size:clamp(1.25rem,5vw,2.5rem)}}
 </style>
 </head>
 <body data-page="home">
@@ -41,7 +43,6 @@
 </ul>
 </nav>
 
-<main>
 <section class="hero" id="hero">
 <video class="hero-video" id="hero-video" autoplay muted loop playsinline poster="assets/img/hero-poster.webp">
 <source src="assets/video/hero-web.mp4" type="video/mp4">
@@ -59,6 +60,7 @@
 </div>
 </section>
 
+<main class="main-content">
 <section class="services">
 <h2>AI-Powered Capabilities</h2>
 <div class="grid grid--3">
