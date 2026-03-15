@@ -14,13 +14,10 @@ interface WaveLayerProps {
 
 export function WaveLayer({ className = '' }: WaveLayerProps) {
   const [mod, setMod] = useState<{
-    ShaderGradientCanvas: React.ComponentType<React.PropsWithChildren<{
-      style?: React.CSSProperties
-      pixelDensity?: number
-      fov?: number
-      gl?: object
-    }>>
-    ShaderGradient: React.ComponentType<Record<string, unknown>>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ShaderGradientCanvas: React.ComponentType<any>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ShaderGradient: React.ComponentType<any>
   } | null>(null)
 
   // 响应式尺寸：530px（desktop）→ 320px（mobile）
