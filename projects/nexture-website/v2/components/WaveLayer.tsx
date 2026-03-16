@@ -1,9 +1,10 @@
 'use client'
 
 /**
- * WaveLayer — Hero 三层金字塔中间波形层（含响应式）
- * 
- * 完整版：含移动端尺寸适配
+ * WaveLayer — Hero 三层金字塔中间波形层
+ *
+ * 等角透视匹配：CSS 3D perspective + rotateX(55deg) + rotateZ(45deg)
+ * 使 ShaderGradient 菱形在视觉上与 Neural_Sieve 背景图的等角平板完全对齐
  */
 
 import { useEffect, useState } from 'react'
@@ -20,11 +21,10 @@ export function WaveLayer({ className = '' }: WaveLayerProps) {
     ShaderGradient: React.ComponentType<any>
   } | null>(null)
 
-  // 响应式尺寸：530px（desktop）→ 320px（mobile）
-  const [size, setSize] = useState(530)
+  // 响应式尺寸：380px（desktop）→ 280px（tablet）→ 180px（mobile）
+  const [size, setSize] = useState(380)
 
   useEffect(() => {
-    // ShaderGradient 动态加载
     import('shadergradient').then((m) => {
       setMod({
         ShaderGradientCanvas: m.ShaderGradientCanvas,
@@ -32,48 +32,38 @@ export function WaveLayer({ className = '' }: WaveLayerProps) {
       })
     }).catch(() => {})
 
-    // 响应式尺寸
     const updateSize = () => {
-      if (window.innerWidth < 480) setSize(260)
-      else if (window.innerWidth < 768) setSize(360)
-      else setSize(530)
+      if (window.innerWidth < 480) setSize(180)
+      else if (window.innerWidth < 768) setSize(280)
+      else setSize(380)
     }
     updateSize()
     window.addEventListener('resize', updateSize, { passive: true })
     return () => window.removeEventListener('resize', updateSize)
   }, [])
 
+  const baseTransform = 'translate(-50%, -50%) perspective(900px) rotateX(55deg) rotateZ(45deg)'
+
   return (
     <>
       <style>{`
-        @keyframes waveRise {
-          0%   { transform: translate(-50%, -50%) rotateZ(45deg) translateY(5px); }
-          100% { transform: translate(-50%, -50%) rotateZ(45deg) translateY(-5px); }
-        }
-        .wave-layer-anim {
-          animation: waveRise 7s ease-in-out alternate infinite;
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .wave-layer-anim {
-            animation: none;
-            transform: translate(-50%, -50%) rotateZ(45deg);
-          }
-        }
+        /* Wave animation disabled - static rendering */
       `}</style>
 
       <div
-        className={`wave-layer-anim ${className}`}
+        className={className}
         style={{
           position: 'absolute',
-          top: '51%',
+          top: '38%',
           left: '50%',
-          transform: 'translate(-50%, -50%) rotateZ(45deg) translateY(5px)',
+          transform: `${baseTransform} translateZ(-12px)`,
           width: `${size}px`,
           height: `${size}px`,
+          opacity: 0.88,
           willChange: 'transform',
           clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
-          maskImage: 'radial-gradient(ellipse 92% 92% at 50% 50%, black 55%, transparent 100%)',
-          WebkitMaskImage: 'radial-gradient(ellipse 92% 92% at 50% 50%, black 55%, transparent 100%)',
+          maskImage: 'radial-gradient(ellipse 70% 70% at 50% 50%, black 55%, transparent 100%)',
+          WebkitMaskImage: 'radial-gradient(ellipse 70% 70% at 50% 50%, black 55%, transparent 100%)',
           zIndex: 1,
           overflow: 'hidden',
           pointerEvents: 'none',
@@ -90,30 +80,29 @@ export function WaveLayer({ className = '' }: WaveLayerProps) {
             <mod.ShaderGradient
               type="waterPlane"
               animate="on"
-              rotationX={52}
+              rotationX={0}
               rotationY={0}
               rotationZ={0}
-              cPolarAngle={105}
-              cDistance={25}
-              uStrength={1.4}
-              uDensity={1.5}
-              uSpeed={0.25}
-              color1="#7456C8"
-              color2="#2A9D8F"
-              color3="#0C0524"
+              cPolarAngle={90}
+              cDistance={22}
+              uStrength={1.2}
+              uDensity={1.4}
+              uSpeed={0.2}
+              color1="#5E4DB8"
+              color2="#00CED1"
+              color3="#0A0320"
               lightType="env"
               envPreset="city"
-              brightness={1.1}
+              brightness={1.0}
               grain="off"
             />
           </mod.ShaderGradientCanvas>
         ) : (
-          // 降级占位
           <div
             style={{
               position: 'absolute',
               inset: 0,
-              background: 'radial-gradient(ellipse at center, #7456C8 0%, #2A9D8F 40%, #0C0524 100%)',
+              background: 'radial-gradient(ellipse at center, #5E4DB8 0%, #1A8C7A 40%, #0A0320 100%)',
               opacity: 0.6,
             }}
           />
