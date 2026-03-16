@@ -86,7 +86,7 @@ export default function HeroBackground({ type = 'hero', opacity = 0.55 }: HeroBa
             height: '700px',
             left: '50%',
             top: '50%',
-            transform: 'translate(-50%, -50%) rotateX(-30deg) rotateZ(45deg)',
+            transform: 'translate(-50%, -50%) rotateX(-30deg)',
             transformOrigin: 'center center',
             WebkitMaskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 35%, rgba(0,0,0,0.5) 60%, transparent 80%)',
             maskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 35%, rgba(0,0,0,0.5) 60%, transparent 80%)',

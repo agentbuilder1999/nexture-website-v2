@@ -3,7 +3,7 @@
 /**
  * WaveLayer — Hero 三层金字塔中间波形层
  *
- * 等角透视匹配：CSS 3D perspective + rotateX(55deg) + rotateZ(45deg)
+ * 等角透视匹配：CSS 3D perspective + rotateX(55deg)（水平放置，无 rotateZ）
  * 使 ShaderGradient 菱形在视觉上与 Neural_Sieve 背景图的等角平板完全对齐
  */
 
@@ -42,7 +42,7 @@ export function WaveLayer({ className = '' }: WaveLayerProps) {
     return () => window.removeEventListener('resize', updateSize)
   }, [])
 
-  const baseTransform = 'translate(-50%, -50%) perspective(900px) rotateX(55deg) rotateZ(45deg)'
+  const baseTransform = 'translate(-50%, -50%) perspective(900px) rotateX(55deg)'
 
   return (
     <>
