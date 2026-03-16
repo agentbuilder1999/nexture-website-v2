@@ -7,7 +7,7 @@ import SectionWrapper from '@/components/SectionWrapper';
 import GradientText from '@/components/GradientText';
 import PartnerLogos from '@/components/PartnerLogos';
 import HeroParticles from '@/components/HeroParticles';
-import { WaveLayer } from '@/components/WaveLayer';
+// WaveLayer removed per Victor request (2026-03-16)
 
 const stats = [
   { value: '90%', label: 'Review Time Saved' },
@@ -47,7 +47,7 @@ export default function HomePage() {
         {/* Layer 0 — Neural_Sieve base illustration */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/assets/neural-sieve.png"
+            src="/assets/neural-sieve-2.png"
             alt=""
             fill
             priority
@@ -59,8 +59,7 @@ export default function HomePage() {
           />
         </div>
 
-        {/* Layer 1 — WaveLayer (ShaderGradient 中间动态波形，三层金字塔中间层) */}
-        <WaveLayer />
+        {/* Layer 1 — WaveLayer removed per Victor request (2026-03-16) */}
 
         {/* Layer 2 — hero-web.mp4 video (subtle motion) */}
         <video
@@ -124,7 +123,7 @@ export default function HomePage() {
         <div className="container mx-auto relative z-10">
           <SectionWrapper className="text-center mb-12">
             <p className="text-sm font-semibold text-[var(--primary)] uppercase tracking-widest mb-3">Our Product</p>
-            <GradientText as="h2" className="text-4xl md:text-5xl font-extrabold mb-4">Meet TheraSeus</GradientText>
+            <GradientText as="h2" className="text-4xl md:text-5xl font-extrabold mb-4 text-center">Meet TheraSeus</GradientText>
             <p className="text-lg text-[var(--text-secondary)] max-w-2xl mx-auto">
               AI-powered capsule endoscopy workflow. From 60 minutes to 6.
               More patients. Better outcomes. Same equipment.
@@ -166,8 +165,9 @@ export default function HomePage() {
                     fill
                     quality={85}
                     className="object-contain object-center"
-                    style={{ mixBlendMode: 'screen', opacity: 0.9 }}
-                    sizes="(max-width: 768px) 100vw, 50vw"
+                    style={{ mixBlendMode: 'screen', opacity: 0.9, filter: 'brightness(1.2) contrast(1.1)' }}
+                    sizes="100vw"
+                    priority
                   />
                 </div>
 
