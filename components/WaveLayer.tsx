@@ -54,7 +54,8 @@ export function WaveLayer({ className = '' }: WaveLayerProps) {
         className={className}
         style={{
           position: 'absolute',
-          top: '38%',
+          backgroundColor: '#0A0320',
+          top: '52%',
           left: '50%',
           transform: `${baseTransform} translateZ(-12px)`,
           width: `${size}px`,
