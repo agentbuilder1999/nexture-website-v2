@@ -4,3 +4,6 @@ datasets/
 *.mp4
 *.part
 .DS_Store
+
+# TheraSeus — moved to nexturenz/theraseus repo
+projects/theraseus/
