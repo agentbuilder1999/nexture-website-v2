@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "site": {
+    "name": "Nexture",
+    "url": "https://nexture.nz",
+    "description": "AI-powered capsule endoscopy analysis platform for gastroenterologists",
+    "language": "en-NZ",
+    "locale": "en_NZ",
+    "twitter": "@nexture_ai",
+    "defaultImage": "/og-image.jpg",
+    "company": {
+      "name": "Nexture Limited",
+      "location": "Christchurch, New Zealand",
+      "founded": "2024"
+    }
+  },
+  "pages": [
+    {
+      "path": "/",
+      "title": "Nexture - AI-Powered Capsule Endoscopy Analysis | TheraSeus™",
+      "description": "Transform 90-minute capsule endoscopy reviews into 13 minutes with TheraSeus™ AI. 95% confidence detection, HIPAA compliant, $135 per case. Start free trial today.",
+      "keywords": [
+        "capsule endoscopy AI",
+        "gastroenterology AI software",
+        "medical imaging AI",
+        "TheraSeus",
+        "capsule endoscopy analysis",
+        "AI lesion detection",
+        "HIPAA compliant medical AI",
+        "New Zealand medical technology",
+        "gastroenterologist software",
+        "automated endoscopy review"
+      ],
+      "og": {
+        "title": "TheraSeus™ - AI Capsule Endoscopy Analysis in 13 Minutes",
+        "description": "AI-powered image filtering + lesion detection for capsule endoscopy. 90% time savings, 95% confidence, HIPAA compliant. Try 50 cases free.",
+        "image": "/og-home.jpg",
+        "type": "website"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "title": "TheraSeus™ - AI Capsule Endoscopy Platform",
+        "description": "13-minute capsule endoscopy reviews with 95% AI confidence. HIPAA compliant. $135/case.",
+        "image": "/twitter-home.jpg"
+      },
+      "canonical": "https://nexture.nz/",
+      "robots": "index, follow",
+      "priority": 1.0,
+      "changefreq": "weekly"
+    },
+    {
+      "path": "/about",
+      "title": "About Nexture - Medical AI Innovators | TheraSeus™",
+      "description": "Nexture builds clinical-grade AI software for gastroenterologists. Founded 2024, NVIDIA Inception member, Medsafe SaMD registration in progress.",
+      "keywords": [
+        "Nexture company",
+        "medical AI startup",
+        "New Zealand health tech",
+        "gastroenterology innovation",
+        "NVIDIA Inception",
+        "Medsafe medical device",
+        "healthcare AI compliance",
+        "medical device software"
+      ],
+      "og": {
+        "title": "About Nexture - Pioneering Medical AI",
+        "description": "Empowering gastroenterologists with AI-assisted diagnostics. Doctor-centric design, transparent algorithms, compliance by design.",
+        "image": "/og-about.jpg",
+        "type": "website"
+      },
+      "twitter": {
+        "card": "summary",
+        "title": "About Nexture",
+        "description": "Clinical-grade AI for gastroenterology. Doctor-centric, transparent, compliant.",
+        "image": "/twitter-about.jpg"
+      },
+      "canonical": "https://nexture.nz/about",
+      "robots": "index, follow",
+      "priority": 0.8,
+      "changefreq": "monthly"
+    },
+    {
+      "path": "/services",
+      "title": "TheraSeus™ Pricing & Plans - $135 Per Case | Nexture",
+      "description": "Flexible pricing for TheraSeus AI platform: $135 pay-per-use, $99/case volume plans, custom enterprise pricing. Pilot program: 50 cases FREE.",
+      "keywords": [
+        "TheraSeus pricing",
+        "capsule endoscopy cost",
+        "medical AI pricing",
+        "gastroenterology software cost",
+        "pay per use medical software",
+        "HIPAA compliant platform pricing",
+        "on-premise medical AI",
+        "cloud medical imaging"
+      ],
+      "og": {
+        "title": "TheraSeus™ Pricing - From $99 Per Case",
+        "description": "Transparent pricing for AI capsule endoscopy analysis. Pay-per-use, practice plans, or enterprise deployment. Try 50 cases free.",
+        "image": "/og-services.jpg",
+        "type": "website"
+      },
+      "twitter": {
+        "card": "summary",
+        "title": "TheraSeus Pricing",
+        "description": "$135/case pay-per-use or $99/case volume plans. 50 free cases in pilot program.",
+        "image": "/twitter-services.jpg"
+      },
+      "canonical": "https://nexture.nz/services",
+      "robots": "index, follow",
+      "priority": 0.9,
+      "changefreq": "monthly"
+    },
+    {
+      "path": "/theraseus",
+      "title": "TheraSeus™ - AI Capsule Endoscopy Platform | Clinical Features & Specs",
+      "description": "TheraSeus AI analyzes 50,000 capsule endoscopy images in 5 minutes. YOLOv8-x detection, Real-ESRGAN enhancement, SAM2 segmentation. Cloud or on-premise.",
+      "keywords": [
+        "TheraSeus platform",
+        "capsule endoscopy AI features",
+        "YOLOv8 medical imaging",
+        "Real-ESRGAN endoscopy",
+        "SAM2 medical segmentation",
+        "lesion detection AI",
+        "polyp detection software",
+        "bleeding detection AI",
+        "DICOM compatible AI",
+        "PACS integration"
+      ],
+      "og": {
+        "title": "TheraSeus™ Platform - AI-Assisted Capsule Endoscopy",
+        "description": "Upload → AI Analysis (5 min) → Doctor Review (13 min). YOLOv8-x detection, 95% confidence, structured reports.",
+        "image": "/og-theraseus.jpg",
+        "type": "product"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "title": "TheraSeus Platform",
+        "description": "AI capsule endoscopy in 3 steps: Upload → AI Analysis → Doctor Review. 95% detection confidence.",
+        "image": "/twitter-theraseus.jpg"
+      },
+      "canonical": "https://nexture.nz/theraseus",
+      "robots": "index, follow",
+      "priority": 0.9,
+      "changefreq": "weekly"
+    },
+    {
+      "path": "/contact",
+      "title": "Contact Nexture - Demo & Support | TheraSeus™",
+      "description": "Get in touch with Nexture for TheraSeus demo, pilot program application, technical support, or partnership inquiries. Christchurch, New Zealand.",
+      "keywords": [
+        "Nexture contact",
+        "TheraSeus demo",
+        "medical AI support",
+        "pilot program application",
+        "gastroenterology software demo",
+        "New Zealand health tech",
+        "medical device partnership"
+      ],
+      "og": {
+        "title": "Contact Nexture - Request Demo or Support",
+        "description": "Questions about TheraSeus? Request a demo, apply for pilot program, or get technical support.",
+        "image": "/og-contact.jpg",
+        "type": "website"
+      },
+      "twitter": {
+        "card": "summary",
+        "title": "Contact Nexture",
+        "description": "Request demo, apply for pilot, or get support. Christchurch, NZ.",
+        "image": "/twitter-contact.jpg"
+      },
+      "canonical": "https://nexture.nz/contact",
+      "robots": "index, follow",
+      "priority": 0.7,
+      "changefreq": "monthly"
+    }
+  ],
+  "seoSettings": {
+    "titleTemplate": "%s | Nexture",
+    "defaultTitle": "Nexture - AI-Powered Medical Imaging",
+    "titleSeparator": "|",
+    "maxTitleLength": 60,
+    "maxDescriptionLength": 160,
+    "jsonLdEnabled": true,
+    "analyticsId": "[GA4_ID_TBD]",
+    "googleSiteVerification": "[VERIFICATION_CODE_TBD]",
+    "msValidate": "[BING_VERIFICATION_TBD]"
+  },
+  "structuredDataGlobal": {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Nexture Limited",
+    "url": "https://nexture.nz",
+    "logo": "https://nexture.nz/logo.svg",
+    "description": "AI-powered capsule endoscopy analysis platform for gastroenterologists",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "NZ",
+      "addressLocality": "Christchurch",
+      "addressRegion": "Canterbury",
+      "streetAddress": "[TBD]"
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "email": "hello@nexture.nz",
+      "contactType": "Customer Service",
+      "areaServed": ["NZ", "AU", "US"],
+      "availableLanguage": "English"
+    },
+    "sameAs": [
+      "https://twitter.com/nexture_ai",
+      "https://linkedin.com/company/nexture",
+      "[Additional social profiles TBD]"
+    ],
+    "foundingDate": "2024"
+  }
+}

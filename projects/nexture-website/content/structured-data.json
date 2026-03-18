@@ -1,0 +1,331 @@
+{
+  "organizationSchema": {
+    "@context": "https://schema.org",
+    "@type": "MedicalOrganization",
+    "name": "Nexture Limited",
+    "alternateName": "Nexture",
+    "url": "https://nexture.nz",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://nexture.nz/logo.svg",
+      "width": 200,
+      "height": 60
+    },
+    "description": "Nexture builds AI-powered medical imaging software for gastroenterologists, specializing in capsule endoscopy analysis with TheraSeus™ platform.",
+    "foundingDate": "2024",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "[Street Address TBD]",
+      "addressLocality": "Christchurch",
+      "addressRegion": "Canterbury",
+      "postalCode": "[Postcode TBD]",
+      "addressCountry": "NZ"
+    },
+    "contactPoint": [
+      {
+        "@type": "ContactPoint",
+        "telephone": "[+64 Phone TBD]",
+        "email": "hello@nexture.nz",
+        "contactType": "Sales",
+        "areaServed": ["NZ", "AU", "US"],
+        "availableLanguage": ["English"]
+      },
+      {
+        "@type": "ContactPoint",
+        "email": "support@nexture.nz",
+        "contactType": "Technical Support",
+        "areaServed": ["NZ", "AU", "US"],
+        "availableLanguage": ["English"]
+      }
+    ],
+    "sameAs": [
+      "https://twitter.com/nexture_ai",
+      "https://linkedin.com/company/nexture",
+      "[GitHub URL TBD]"
+    ],
+    "slogan": "AI-Assisted Medical Imaging for Gastroenterologists",
+    "medicalSpecialty": "Gastroenterology",
+    "knowsAbout": [
+      "Artificial Intelligence in Medicine",
+      "Capsule Endoscopy",
+      "Medical Imaging Analysis",
+      "Computer-Aided Detection",
+      "Gastroenterology Diagnostics"
+    ]
+  },
+
+  "productSchema": {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "TheraSeus™",
+    "applicationCategory": "MedicalApplication",
+    "operatingSystem": "Web-based (Cloud or On-Premise)",
+    "description": "AI-powered capsule endoscopy analysis platform that filters 50,000+ images, detects lesions (bleeding, polyps, ulcers) with 95% confidence, and generates structured reports in under 5 minutes.",
+    "url": "https://nexture.nz/theraseus",
+    "image": "https://nexture.nz/theraseus-product-image.jpg",
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "Pay-Per-Use Plan",
+        "price": "135.00",
+        "priceCurrency": "NZD",
+        "description": "No contract, $135 per case analyzed",
+        "availability": "https://schema.org/InStock",
+        "url": "https://nexture.nz/services#pay-per-use"
+      },
+      {
+        "@type": "Offer",
+        "name": "Practice Plan",
+        "price": "99.00",
+        "priceCurrency": "NZD",
+        "description": "Volume pricing for 20+ cases per month",
+        "availability": "https://schema.org/InStock",
+        "url": "https://nexture.nz/services#practice-plan"
+      },
+      {
+        "@type": "Offer",
+        "name": "Pilot Program",
+        "price": "0.00",
+        "priceCurrency": "NZD",
+        "description": "50 cases FREE for 3 months",
+        "availability": "https://schema.org/LimitedAvailability",
+        "url": "https://nexture.nz/contact#pilot"
+      }
+    ],
+    "featureList": [
+      "Automated image filtering (90% reduction)",
+      "AI lesion detection (YOLOv8-x)",
+      "Super-resolution enhancement (Real-ESRGAN)",
+      "Precise segmentation (SAM2)",
+      "Structured report generation",
+      "DICOM/PACS integration",
+      "HL7 FHIR export",
+      "HIPAA compliant cloud deployment",
+      "On-premise deployment option"
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "[TBD]",
+      "reviewCount": "[TBD]",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "creator": {
+      "@type": "Organization",
+      "name": "Nexture Limited"
+    },
+    "softwareVersion": "1.0",
+    "releaseNotes": "Initial public release",
+    "screenshot": "https://nexture.nz/theraseus-screenshot.jpg"
+  },
+
+  "faqSchema": {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is TheraSeus FDA-approved?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "TheraSeus is not yet FDA-approved. We are currently operating under NZ medical device regulations (Medsafe SaMD classification pending) and preparing our FDA 510(k) or De Novo submission for 2027."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does TheraSeus replace the doctor?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. TheraSeus is an AI-assisted tool — the doctor always makes the final diagnostic decision. AI findings are presented as suggestions with confidence scores. You review, confirm, modify, or delete each detection."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How accurate is the AI?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Our internal validation shows 95% sensitivity for active bleeding, 90% for polyps, and 88% for ulcers. We are conducting external clinical trials to validate these metrics. AI performance varies by lesion type and image quality — which is why doctor review is essential."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my patient data secure?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. All data is encrypted at rest (AES-256) and in transit (TLS 1.3). Cloud deployment uses AWS HIPAA-eligible services. On-premise deployment keeps data entirely on your servers. We maintain full audit logs of all PHI access."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much does TheraSeus cost?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Pay-per-use pricing is $135/case (no contract). Volume discounts available for practices doing 20+ cases/month ($99/case). Enterprise plans (on-premise, SSO, SLA) are custom-priced. Pilot program: first 50 cases FREE."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What capsule endoscopes are supported?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "TheraSeus is device-agnostic. We support any capsule endoscope that outputs standard image formats (DICOM, JPEG, MP4). This includes Medtronic PillCam, Olympus EndoCapsule, IntroMedic MiroCam, Ankon NaviCam, and more."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use TheraSeus on-premise?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. On-premise deployment is available for hospitals with strict data residency requirements. Requires a GPU server (equivalent to AWS g4dn.xlarge). Contact us for hardware specs and installation support."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does TheraSeus integrate with my EMR/PACS?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "TheraSeus supports DICOM image import and HL7 FHIR report export. We have tested integration with Sectra, GE Centricity, Orion Health, and Epic. If you use a different system, contact us — we can likely integrate via standard protocols."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How long is the pilot program?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "3 months or 50 cases (whichever comes first). After the pilot, you can choose to continue with pay-per-use pricing, upgrade to a Practice or Enterprise plan, or discontinue (no obligations)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What if the AI misses a lesion?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "AI filtering is conservative — we prioritize recall over precision (better to flag too many than miss a critical finding). However, no AI is perfect. That's why you review filtered images and have access to all original frames. If you spot something AI missed, you can add it to the report manually."
+        }
+      }
+    ]
+  },
+
+  "medicalWebPageSchema": {
+    "@context": "https://schema.org",
+    "@type": "MedicalWebPage",
+    "name": "TheraSeus™ - AI Capsule Endoscopy Platform",
+    "url": "https://nexture.nz/theraseus",
+    "description": "Clinical-grade AI software for capsule endoscopy analysis, designed for gastroenterologists.",
+    "medicalAudience": [
+      {
+        "@type": "MedicalAudience",
+        "audienceType": "Gastroenterologist"
+      },
+      {
+        "@type": "MedicalAudience",
+        "audienceType": "Hospital Administrator"
+      }
+    ],
+    "about": {
+      "@type": "MedicalProcedure",
+      "name": "Capsule Endoscopy",
+      "alternateName": "Video Capsule Endoscopy",
+      "procedureType": "Diagnostic Imaging"
+    }
+  },
+
+  "breadcrumbSchema": {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://nexture.nz/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "About",
+        "item": "https://nexture.nz/about"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Services",
+        "item": "https://nexture.nz/services"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": "TheraSeus",
+        "item": "https://nexture.nz/theraseus"
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "name": "Contact",
+        "item": "https://nexture.nz/contact"
+      }
+    ]
+  },
+
+  "videoSchema": {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    "name": "TheraSeus™ Platform Demo",
+    "description": "2-minute walkthrough of TheraSeus AI capsule endoscopy analysis platform",
+    "thumbnailUrl": "https://nexture.nz/video-thumbnail.jpg",
+    "uploadDate": "[Video Upload Date TBD]",
+    "duration": "PT2M",
+    "contentUrl": "https://nexture.nz/videos/theraseus-demo.mp4",
+    "embedUrl": "[YouTube or Vimeo Embed URL TBD]",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Nexture Limited",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://nexture.nz/logo.svg"
+      }
+    }
+  },
+
+  "howToSchema": {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Use TheraSeus™ for Capsule Endoscopy Analysis",
+    "description": "Three simple steps to analyze capsule endoscopy images with AI assistance",
+    "step": [
+      {
+        "@type": "HowToStep",
+        "position": 1,
+        "name": "Upload Images",
+        "text": "Drag-and-drop capsule endoscopy video or DICOM files, or enable automatic PACS import.",
+        "url": "https://nexture.nz/theraseus#step-1"
+      },
+      {
+        "@type": "HowToStep",
+        "position": 2,
+        "name": "AI Analysis",
+        "text": "TheraSeus AI processes 50,000 images in 5 minutes: frame extraction, quality filtering, super-resolution, lesion detection, segmentation, and report generation.",
+        "url": "https://nexture.nz/theraseus#step-2"
+      },
+      {
+        "@type": "HowToStep",
+        "position": 3,
+        "name": "Doctor Review",
+        "text": "Review AI-filtered images, confirm or modify detections, edit report, add signature, and export to EMR or send to patient.",
+        "url": "https://nexture.nz/theraseus#step-3"
+      }
+    ],
+    "totalTime": "PT18M"
+  },
+
+  "implementationNotes": {
+    "insertLocation": "Add these JSON-LD scripts to the <head> section of each page",
+    "organizationSchema": "Every page",
+    "productSchema": "/theraseus and /services pages",
+    "faqSchema": "/contact page",
+    "medicalWebPageSchema": "/theraseus page",
+    "breadcrumbSchema": "All pages (update breadcrumb path per page)",
+    "videoSchema": "Homepage and /theraseus (when video is ready)",
+    "howToSchema": "/theraseus page"
+  }
+}

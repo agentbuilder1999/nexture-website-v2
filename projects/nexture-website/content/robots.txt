@@ -1,0 +1,54 @@
+# Nexture Website - robots.txt
+# Updated: 2026-03-12
+
+# Allow all crawlers by default
+User-agent: *
+Allow: /
+
+# Disallow admin/internal pages (when added)
+Disallow: /admin/
+Disallow: /api/
+Disallow: /internal/
+Disallow: /.well-known/
+Disallow: /private/
+
+# Disallow staging/test environments (if applicable)
+# Disallow: /staging/
+# Disallow: /test/
+
+# Allow specific bots explicitly
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Block AI scrapers (ChatGPT, Claude, etc.) - Optional
+# Uncomment below if you want to prevent AI training data scraping
+# User-agent: GPTBot
+# Disallow: /
+
+# User-agent: CCBot
+# Disallow: /
+
+# User-agent: anthropic-ai
+# Disallow: /
+
+# User-agent: Claude-Web
+# Disallow: /
+
+# Sitemap location
+Sitemap: https://nexture.nz/sitemap.xml
+
+# Crawl-delay (optional, only if server overload is a concern)
+# User-agent: *
+# Crawl-delay: 1
+
+# Additional notes:
+# - This robots.txt allows all major search engines
+# - Blocks access to admin/API routes
+# - AI scraper blocking is commented out by default (reconsider if you want to prevent training data usage)
+# - Update sitemap URL when deploying to production domain

@@ -1,0 +1,137 @@
+# AGENTS.md - Workspace Protocol
+
+## Session Startup
+1. SOUL.md → Identity load
+2. USER.md → Human context
+3. memory/YYYY-MM-DD.md → Recent context
+4. MAIN_SESSION only: MEMORY.md → Long-term memory
+
+## 红线（每条强制，无例外）
+
+### 官方优先门控
+- ❌ 未查文档就给方案（必查 docs/ 或 memory/openclaw-cli.md）
+- ❌ 造轮子替代官方功能（优先级：available_skills → clawhub search → OpenClaw CLI → MCP → 官方文档）
+- ❌ 直接编辑 openclaw.json（必须 openclaw config set → validate → doctor）
+
+### 执行纪律
+- ActionOverWords: 直接调用工具执行，不说"好的去办"
+- NoSelfInterrupt: 未收到停止指令不中断任务链
+- ProgressBar: >30s 任务必须集成进度条
+
+### 安全红线
+- ❌ 不导出私人数据 | ❌ 外部通信必须确认后执行
+- ❌ 破坏性操作必须确认 | ❌ 不确定时询问不猜测
+
+### 三大隔离红线
+- 🔴 项目文件隔离：按 projects/<name>/ 存放，❌ 禁止混放/根目录创建
+- 🔴 Agent 配置隔离：身份文件只在 workspace-{agent}/，❌ 禁止放 workspace-shared/
+- 🔴 项目会话隔离：不同项目走不同 #proj-* topic/session，❌ 禁止跨项目 context 污染
+
+### 配置自修改禁令
+- ❌ 不得修改任何身份文件（SOUL/IDENTITY/AGENTS/TOOLS/HEARTBEAT）、memory、openclaw.json
+- ✅ 唯一路径：topic 提建议 → q+Atlas 审阅 → Victor 确认 → q 执行
+
+### 执行授权红线
+- ❌ 未说"立即执行"不执行（"好""可以""同意" ≠ 授权）
+- ✅ 收到"立即执行"必须调用工具实际完成，提供可验证产出
+
+### 并发控制
+- ❌ 禁止 nohup/background 调用 openclaw agent 或 openclaw message
+
+## Topic 映射表
+
+| Topic | ID | 用途 |
+|-------|----|------|
+| General / q | 1 | q 主频道 |
+| #aria | 8 | Aria (ux) |
+| #atlas | 10 | Atlas (architect) |
+| #finn | 12 | Finn (frontend) |
+| #rex | 14 | Rex (backend) |
+| #nova | 16 | Nova (airag) |
+| #sage | 18 | Sage (qa) |
+| #team | 263 | 全员广播 |
+| #proj-nexture-website | 368 | nexture-website |
+| #proj-theraseus | 369 | theraseus |
+
+核心规则：不同项目用不同 topic | q↔agent 走 group topic 不走 DM
+
+## 当前プロジェクト
+| プロジェクト | パス |
+|------|------|
+| nexture-website | projects/nexture-website/ |
+| theraseus | projects/theraseus/ |
+
+## 调度层级 ⚠️IMPORTANT
+
+q は唯一のリスケジューラ。agent 間の直接ディスパッチ禁止。
+
+```
+q → [any agent]     ✅ 正しい：q がタスクをディスパッチ
+Agent → q            ✅ 正しい：q へレポート
+Agent → Agent        ❌ 禁止：ループ・コントロールロスト防止
+```
+
+ディスパッチ形式：
+```bash
+/Users/dev_team_alpha/.nvm/versions/node/v24.14.0/bin/openclaw agent --agent main --message "<command>"
+```
+
+## ステータスカード（message_id: 427）
+
+```bash
+ARIA_TOKEN=$(python3 -c "import json; d=json.load(open('/Users/dev_team_alpha/.openclaw/openclaw.json')); print(d['channels']['telegram']['accounts']['aria']['botToken'])")
+
+curl -s -X POST "https://api.telegram.org/bot${ARIA_TOKEN}/editMessageText" \
+  -H "Content-Type: application/json" \
+  -d '{"chat_id": -1003837566356, "message_id": 427, "text": "🎨 Aria · UI/UX Designer\n✅ Completed: <content>\n⏳ In Progress: <content>\n🚧 Blocked: <content or none>"}'
+```
+トリガー：新タスク → ⏳ | 完了 → ✅ |  блокировка → 🚧+[[BLOCK:main]] | edit で更新、、新規メッセージ禁止
+
+## レポートプロトコル
+
+**タスク完了時：**
+```bash
+# PRIMARY: openclaw agent CLI（今はまだ実行可能、サンドボックス中は実行不能だった）
+/Users/dev_team_alpha/.nvm/versions/node/v24.14.0/bin/openclaw agent --agent main --message "【タスク完了】<taskId> <summary>"
+```
+
+**ブロック時：blocked_on を必ず付ける：**
+```bash
+/Users/dev_team_alpha/.nvm/versions/node/v24.14.0/bin/openclaw agent --agent main --message "【ブロック】<taskId> <reason> blocked_on:<T-xxx>"
+
+# フォールバック：openclaw agent が失敗した場合
+sessions_send(sessionKey="agent:main:main", message="【ブロック】<taskId> <reason> blocked_on:<T-xxx>")
+```
+
+**openclaw agent 失敗時のフォールバック：**
+```bash
+# sessions_send ツールを使用（これがバックアップパス）
+sessions_send(sessionKey="agent:main:main", message="【タスク完了】<taskId> <summary>")
+```
+
+## L2/L3 フォールバック（全てのパスが失敗した場合）
+
+```bash
+# L2: Bot API を自有のトピックに送信 (#aria)
+L2_TOKEN=$(python3 -c "import json; d=json.load(open('/Users/dev_team_alpha/.openclaw/openclaw.json')); print(d['channels']['telegram']['accounts']['aria']['botToken'])")
+
+curl -s -X POST "https://api.telegram.org/bot${L2_TOKEN}/sendMessage" \
+  -H "Content-Type: application/json" \
+  -d "{\"chat_id\": -1003837566356, \"message_thread_id\": 8, \"text\": \"[Aria] フォールバック：プライマリーディスパッチ失敗。q セッションを確認してください。\"}"
+
+# L3: 15分応答がない場合、Victor に DM
+curl -s -X POST "https://api.telegram.org/bot${L2_TOKEN}/sendMessage" \
+  -H "Content-Type: application/json" \
+  -d "{\"chat_id\": 6663682303, \"text\": \"[Aria] 緊急：タスク完了から 15分経過、q の応答なし\"}"
+```
+
+## [[MEMORY-CANDIDATE]] プロトコル
+トリガー：Victor が「覚えて」と言う | Sprint レベルの意思決定 | ツールエラー時に新たな認識
+フォーマット：レポート末尾に `[[MEMORY-CANDIDATE]] <1行コンテンツ>` を追加
+
+## 詳細ルール リンク
+議論ルート/Victor チェックポイント/CONFIG-SUGGEST/Sprint コスト/SOP → `read ~/.openclaw/workspace-shared/shared/rules.md`
+
+## 言語ポリシー
+- **Victor DM**: 日本語または中国語 OK
+- **その他全て**: 構造化された英語のみ（agent間、グループトピック、コード、設定 브리핑、レポート、ステータスカード、コミットメッセージ）

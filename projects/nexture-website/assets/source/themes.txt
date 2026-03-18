@@ -1,0 +1,47 @@
+Colors
+Theme palette 
+Primary accent color
+#9A81DF 10%, #7456C8 90%
+Secondary accent colors (optional)
+#D783D8
+#FF90A5
+#FFB071
+#14083A
+Text
+Heading color
+Aa
+#A680FF 5%, #FF85B8 45%, #FFB070 85%
+Body color
+Aa
+#E0D6DE
+Link color
+Aa
+#876CD4 (default)
+Button color
+Aa
+Aa
+#9A81DF 10%, #7456C8 90% (default)
+Accessibility
+
+
+Background
+Card background color
+#0C0524
+Page background
+2225×1582px
+
+Purple bfg.png
+
+Fonts
+Headings
+
+
+
+#A680FF 5%, #FF85B8 45%, #FFB070 85%
+
+Advanced
+Body
+
+
+
+#E0D6DE

@@ -7,3 +7,5 @@ datasets/
 
 # TheraSeus — moved to nexturenz/theraseus repo
 projects/theraseus/
+.vercel-token
+.clawhub/
