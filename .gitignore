@@ -1,11 +1,3 @@
-datasets/
-*.zip
-*.tar.gz
-*.mp4
-*.part
-.DS_Store
-
-# TheraSeus — moved to nexturenz/theraseus repo
-projects/theraseus/
-.vercel-token
-.clawhub/
+node_modules/
+.next/
+.vercel/
