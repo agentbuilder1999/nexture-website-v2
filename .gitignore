@@ -1,3 +1,14 @@
 node_modules/
 .next/
 .vercel/
+
+# OS
+.DS_Store
+.clawhub/
+
+# Secrets
+.vercel-token
+
+# Large source assets
+projects/nexture-website/assets/source/*.zip
+projects/nexture-website/assets/source/*.mp4
