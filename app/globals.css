@@ -44,8 +44,8 @@
   --space-5:20px; --space-6:24px; --space-8:32px; --space-10:40px;
   --space-12:48px; --space-16:64px;
   --px-page: clamp(20px,5vw,80px);
-  --section-py: clamp(48px,6vw,72px);
-  --section-py-sm: clamp(40px,5vw,80px);
+  --section-py: clamp(56px,7vw,96px);
+  --section-py-sm: clamp(32px,4vw,56px);
 }
 
 /* ── Base ─────────────────────────────────────────────────── */
@@ -103,6 +103,8 @@ body {
 }
 
 /* ── Buttons ──────────────────────────────────────────────── */
+/* btn-primary is alias for btn-secondary — secondary visual weight */
+.btn-secondary,
 .btn-primary {
   background: var(--gradient-primary);
   color: #fff;
@@ -114,6 +116,7 @@ body {
   display: inline-flex; align-items: center; gap: 8px;
   text-decoration: none;
 }
+.btn-secondary:hover,
 .btn-primary:hover {
   opacity: 0.9;
   box-shadow: var(--glow-purple);
@@ -157,6 +160,12 @@ body {
   background: rgba(154,129,223,0.18);
   box-shadow: var(--glow-purple);
   transform: translateY(-1px);
+}
+
+/* ── Focus Visible ────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
 /* ── Section wrapper ──────────────────────────────────────── */

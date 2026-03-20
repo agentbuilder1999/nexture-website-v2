@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import HeroBackground from '@/components/HeroBackground';
 import SectionWrapper from '@/components/SectionWrapper';
@@ -10,9 +10,9 @@ import HeroParticles from '@/components/HeroParticles';
 // WaveLayer removed per Victor request (2026-03-16)
 
 const stats = [
-  { value: '90%', label: 'Review Time Saved' },
-  { value: '$135', label: 'Per Case — No Upfront Cost' },
-  { value: '55,000+', label: 'Frames Analysed Per Study' },
+  { value: 90, suffix: '%', label: 'Review Time Saved' },
+  { value: 135, prefix: '$', label: 'Per Case — No Upfront Cost' },
+  { value: 55000, suffix: '+', label: 'Frames Analysed Per Study' },
 ];
 
 const features = [
@@ -27,6 +27,92 @@ const steps = [
   { num: '02', title: 'AI Filters 55,000 Frames', desc: 'TheraSeus AI analyses every frame and surfaces the 1,250 most clinically relevant.' },
   { num: '03', title: 'Review & Report in 6 Min', desc: 'Doctor reviews AI-prioritised findings, confirms, and generates a signed report.' },
 ];
+
+// ── CountUp hook using IntersectionObserver ──────────────────
+function useCountUp(target: number, duration = 2000, triggered = false) {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    if (!triggered) return;
+    let start: number | null = null;
+    const step = (ts: number) => {
+      if (!start) start = ts;
+      const progress = Math.min((ts - start) / duration, 1);
+      // ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.floor(eased * target));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [target, duration, triggered]);
+  return count;
+}
+
+function StatCard({ value, suffix, prefix, label }: { value: number; suffix?: string; prefix?: string; label: string }) {
+  const [triggered, setTriggered] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const count = useCountUp(value, 2000, triggered);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setTriggered(true); obs.disconnect(); }
+    }, { threshold: 0.3 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  // Format large numbers with commas
+  const formatted = count >= 1000 ? count.toLocaleString() : count.toString();
+
+  return (
+    <div ref={ref}>
+      <p className="text-4xl font-extrabold gradient-text mb-1">
+        {prefix}{formatted}{suffix}
+      </p>
+      <p className="text-sm text-[var(--text-secondary)]">{label}</p>
+    </div>
+  );
+}
+
+// ── Video block with click-to-unmute ────────────────────────
+function VideoBlock({ className }: { className?: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [muted, setMuted] = useState(true);
+
+  const handleClick = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (muted) {
+      v.muted = false;
+      v.volume = 0.6;
+      setMuted(false);
+    } else {
+      v.muted = true;
+      setMuted(true);
+    }
+  };
+
+  return (
+    <div className={`relative cursor-pointer group ${className ?? ''}`} onClick={handleClick}>
+      <video
+        ref={videoRef}
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="w-full h-full object-cover"
+        aria-label="Nexture intro video — click to toggle sound"
+      >
+        <source src="/videos/introhome.mp4" type="video/mp4" />
+      </video>
+      {/* Mute badge */}
+      <div className="absolute bottom-3 right-3 px-2 py-1 rounded bg-black/50 text-xs text-white opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+        {muted ? '🔇 Click for sound' : '🔊 Click to mute'}
+      </div>
+    </div>
+  );
+}
 
 export default function HomePage() {
   useEffect(() => {
@@ -85,12 +171,13 @@ export default function HomePage() {
               Now Available — NZ &amp; US Healthcare
             </div>
 
+            {/* #9 — Hero H1 gradient: both lines use gradient-text */}
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-10 hero-title">
               <span className="gradient-text word-reveal" style={{transitionDelay:'0ms'}}>Pushing</span>{' '}
               <span className="gradient-text word-reveal" style={{transitionDelay:'80ms'}}>the</span>{' '}
               <span className="gradient-text word-reveal" style={{transitionDelay:'160ms'}}>Boundaries</span>
               <br />
-              <span className="text-[var(--text-heading)] word-reveal" style={{transitionDelay:'240ms'}}>of AI</span>
+              <span className="gradient-text word-reveal" style={{transitionDelay:'240ms'}}>of AI</span>
             </h1>
 
             <div className="flex flex-wrap gap-4">
@@ -105,17 +192,21 @@ export default function HomePage() {
       </section>
 
       {/* ─── STATS BAR ────────────────────────────────────────────── */}
+      {/* #7 — CountUp animation on scroll */}
       <section className="bg-[var(--bg-card)] border-y border-[var(--border-subtle)] px-[var(--px-page)] py-8">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
-            {stats.map(({ value, label }) => (
-              <div key={label}>
-                <p className="text-4xl font-extrabold gradient-text mb-1">{value}</p>
-                <p className="text-sm text-[var(--text-secondary)]">{label}</p>
-              </div>
+            {stats.map(({ value, suffix, prefix, label }) => (
+              <StatCard key={label} value={value} suffix={suffix} prefix={prefix} label={label} />
             ))}
           </div>
         </div>
+      </section>
+
+      {/* ─── INTRO VIDEO (below Hero) ─────────────────────────────── */}
+      {/* #15 — Video moved out of Hero, scroll-trigger autoplay */}
+      <section className="w-full overflow-hidden bg-[var(--bg-section-alt)]" style={{ maxHeight: '60vh' }}>
+        <VideoBlock className="w-full" />
       </section>
 
       {/* ─── PRODUCT INTRO (TheraSeus + Funnel_Collapse) ──────────── */}
@@ -182,10 +273,12 @@ export default function HomePage() {
           </div>
 
           <SectionWrapper className="text-center mt-10">
-            <Link href="/product" className="btn-primary">Explore TheraSeus →</Link>
+            {/* #8 — Secondary CTA uses btn-secondary */}
+            <Link href="/product" className="btn-secondary">Explore TheraSeus →</Link>
           </SectionWrapper>
         </div>
       </section>
+
       {/* ─── HOW IT WORKS ─────────────────────────────────────────── */}
       <section className="section bg-[var(--bg-section-alt)]">
         <div className="container mx-auto">
@@ -227,19 +320,25 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── A5: Remnant Shell brand-area overlay (Aria B-batch spec TBD) ──── */}
-      {/* TODO-B: Replace this div with full-width image composition per Aria spec */}
+      {/* ─── A5: Remnant Shell brand-area — #3 video overlay ─────── */}
+      {/* #3 — Remnant Shell section now includes introhome.mp4 */}
       <div className="relative w-full h-[480px] overflow-hidden bg-[var(--bg-section-alt)]">
-        <Image
-          src="/assets/remnant-shell-3.png"
-          alt=""
-          fill
-          quality={75}
-          className="object-cover object-center"
-          style={{ opacity: 0.5, mixBlendMode: 'screen' }}
-          sizes="100vw"
-          aria-hidden="true"
-        />
+        {/* Video layer */}
+        <VideoBlock className="absolute inset-0 w-full h-full" />
+
+        {/* Remnant Shell image on top */}
+        <div className="absolute inset-0 pointer-events-none">
+          <Image
+            src="/assets/remnant-shell-3.png"
+            alt=""
+            fill
+            quality={75}
+            className="object-cover object-center"
+            style={{ opacity: 0.5, mixBlendMode: 'screen' }}
+            sizes="100vw"
+            aria-hidden="true"
+          />
+        </div>
         {/* Left + right edge fades */}
         <div className="absolute inset-0 bg-gradient-to-r from-[var(--bg-section-alt)] via-transparent to-[var(--bg-section-alt)] opacity-70 pointer-events-none" />
         {/* Top + bottom fades */}
@@ -258,6 +357,7 @@ export default function HomePage() {
               Join gastroenterologists across New Zealand and the US already saving time with TheraSeus.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
+              {/* Primary CTAs use btn-teal (highest visual weight) */}
               <Link href="/contact" className="btn-teal">Request a Demo</Link>
               <Link href="/contact?type=pilot" className="btn-ghost">Join as a Pilot Partner</Link>
             </div>

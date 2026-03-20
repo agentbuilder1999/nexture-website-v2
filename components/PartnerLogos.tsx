@@ -2,56 +2,40 @@ import Image from 'next/image';
 
 interface Partner {
   name: string;
-  logo?: string;        // path to image asset
-  color?: string;       // fallback text color
-  logoWidth?: number;
+  logo: string;
+  width: number;
+  height: number;
 }
 
+// Real partner logo assets — copied to public/partners/
 export const partners: Partner[] = [
-  { name: 'NVIDIA Inception', color: '#76B900' },
-  {
-    name: 'Ministry of Awesome',
-    logo: '/assets/logo-ministry-awesome.png',
-    logoWidth: 140,
-  },
-  { name: 'University of Otago', color: '#00539F' },
-  { name: 'Amazon Web Services', color: '#FF9900' },
-  {
-    name: 'Google Cloud',
-    logo: '/assets/logo-google-cloud.png',
-    logoWidth: 110,
-  },
+  { name: 'Google Cloud', logo: '/partners/Google-Cloud-Emblem.png', width: 120, height: 40 },
+  { name: 'University of Otago', logo: '/partners/uoo-logo.svg', width: 140, height: 40 },
+  { name: 'Amazon Web Services', logo: '/partners/amazon_web_services_logo.jpg', width: 120, height: 40 },
+  { name: 'Ministry of Awesome', logo: '/partners/ministryofawesome_logo.jpg', width: 120, height: 40 },
+  { name: 'NVIDIA Inception', logo: '/partners/nvidia-inception-program-badge-rgb-for-screen.png', width: 100, height: 40 },
 ];
 
 export default function PartnerLogos() {
   return (
-    <div className="flex flex-wrap justify-center items-center gap-6 md:gap-10">
-      {partners.map(({ name, logo, color, logoWidth }) =>
-        logo ? (
-          <div
-            key={name}
-            className="flex items-center justify-center px-4 py-2.5 rounded-lg border border-[var(--border-default)] bg-[var(--bg-card)] transition-all hover:border-[var(--border-strong)] h-12"
-            title={name}
-          >
-            <Image
-              src={logo}
-              alt={name}
-              height={32}
-              width={logoWidth ?? 100}
-              className="h-8 w-auto object-contain brightness-0 invert"
-              style={{ maxWidth: logoWidth }}
-            />
-          </div>
-        ) : (
-          <div
-            key={name}
-            className="px-5 py-2.5 rounded-lg border border-[var(--border-default)] bg-[var(--bg-card)] text-sm font-semibold transition-all hover:border-[var(--border-strong)] h-12 flex items-center"
-            style={{ color }}
-          >
-            {name}
-          </div>
-        )
-      )}
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 items-center justify-items-center">
+      {partners.map(({ name, logo, width, height }) => (
+        <div
+          key={name}
+          className="flex items-center justify-center px-4 py-3 rounded-lg border border-[var(--border-default)] bg-[var(--bg-card)] transition-all hover:border-[var(--border-strong)] group"
+          style={{ height: 64, minWidth: 80 }}
+          title={name}
+        >
+          <Image
+            src={logo}
+            alt={name}
+            width={width}
+            height={height}
+            className="object-contain transition-all duration-300 grayscale group-hover:grayscale-0"
+            style={{ height: 40, width: 'auto', maxWidth: width }}
+          />
+        </div>
+      ))}
     </div>
   );
 }
