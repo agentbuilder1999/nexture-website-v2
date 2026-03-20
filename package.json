@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@react-three/fiber": "^8.17.10",
+    "@react-three/fiber": "^9.5.0",
     "@shadergradient/react": "2.4.20",
     "@tsparticles/engine": "^3.9.1",
     "@tsparticles/react": "^3.0.0",
