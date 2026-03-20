@@ -36,6 +36,16 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "projects",
+    "skills",
+    "scripts",
+    "templates",
+    "references",
+    "shared",
+    "docs",
+    "assets",
+    "orchestration",
+    "telegram-export"
   ]
 }

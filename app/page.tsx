@@ -75,41 +75,20 @@ function StatCard({ value, suffix, prefix, label }: { value: number; suffix?: st
   );
 }
 
-// ── Video block with click-to-unmute ────────────────────────
-function VideoBlock({ className }: { className?: string }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [muted, setMuted] = useState(true);
-
-  const handleClick = () => {
-    const v = videoRef.current;
-    if (!v) return;
-    if (muted) {
-      v.muted = false;
-      v.volume = 0.6;
-      setMuted(false);
-    } else {
-      v.muted = true;
-      setMuted(true);
-    }
-  };
-
+// ── Wistia embed block (replaces local introhome.mp4) ────────
+// media-id: 3bhr3pi6rc | aspect: 16:9
+function WistiaBlock({ className }: { className?: string }) {
   return (
-    <div className={`relative cursor-pointer group ${className ?? ''}`} onClick={handleClick}>
-      <video
-        ref={videoRef}
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="w-full h-full object-cover"
-        aria-label="Nexture intro video — click to toggle sound"
-      >
-        <source src="/videos/introhome.mp4" type="video/mp4" />
-      </video>
-      {/* Mute badge */}
-      <div className="absolute bottom-3 right-3 px-2 py-1 rounded bg-black/50 text-xs text-white opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-        {muted ? '🔇 Click for sound' : '🔊 Click to mute'}
-      </div>
+    <div className={`relative ${className ?? ''}`}>
+      {/* eslint-disable-next-line @next/next/no-before-interactive-script-in-document */}
+      <script src="https://fast.wistia.com/player.js" async />
+      <script src="https://fast.wistia.com/embed/3bhr3pi6rc.js" async type="module" />
+      {/* @ts-expect-error — wistia-player is a custom element */}
+      <wistia-player
+        media-id="3bhr3pi6rc"
+        aspect="1.7777777777777777"
+        style={{ width: '100%', height: '100%' }}
+      />
     </div>
   );
 }
@@ -204,9 +183,9 @@ export default function HomePage() {
       </section>
 
       {/* ─── INTRO VIDEO (below Hero) ─────────────────────────────── */}
-      {/* #15 — Video moved out of Hero, scroll-trigger autoplay */}
+      {/* #15 — Wistia embed replaces local introhome.mp4 (was 53MB, exceeded Vercel limit) */}
       <section className="w-full overflow-hidden bg-[var(--bg-section-alt)]" style={{ maxHeight: '60vh' }}>
-        <VideoBlock className="w-full" />
+        <WistiaBlock className="w-full" />
       </section>
 
       {/* ─── PRODUCT INTRO (TheraSeus + Funnel_Collapse) ──────────── */}
@@ -321,10 +300,10 @@ export default function HomePage() {
       </section>
 
       {/* ─── A5: Remnant Shell brand-area — #3 video overlay ─────── */}
-      {/* #3 — Remnant Shell section now includes introhome.mp4 */}
+      {/* #3 — Wistia embed replaces local introhome.mp4 */}
       <div className="relative w-full h-[480px] overflow-hidden bg-[var(--bg-section-alt)]">
-        {/* Video layer */}
-        <VideoBlock className="absolute inset-0 w-full h-full" />
+        {/* Wistia embed layer */}
+        <WistiaBlock className="absolute inset-0 w-full h-full" />
 
         {/* Remnant Shell image on top */}
         <div className="absolute inset-0 pointer-events-none">
