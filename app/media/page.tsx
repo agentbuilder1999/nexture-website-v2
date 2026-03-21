@@ -19,9 +19,9 @@ const pressItems = [
 ];
 
 const podcasts = [
-  { platform: 'Spotify', icon: '🎵', url: '#' },
-  { platform: 'Apple Podcasts', icon: '🎙️', url: '#' },
-  { platform: 'YouTube', icon: '▶️', url: '#' },
+  { platform: 'Spotify', icon: '🎵' },
+  { platform: 'Apple Podcasts', icon: '🎙️' },
+  { platform: 'YouTube', icon: '▶️' },
 ];
 
 export default function MediaPage() {
@@ -93,15 +93,18 @@ export default function MediaPage() {
                       Victor Sun and guests explore the intersection of artificial intelligence, healthcare innovation, and the future of clinical practice. Episodes available on all major platforms.
                     </p>
                     <div className="flex flex-wrap gap-3">
-                      {podcasts.map(({ platform, icon, url }) => (
-                        <a
+                      {podcasts.map(({ platform, icon }) => (
+                        <span
                           key={platform}
-                          href={url}
-                          className="btn-ghost text-sm py-2 px-4"
-                          aria-label={`Listen on ${platform}`}
+                          className="btn-ghost text-sm py-2 px-4 opacity-50 cursor-not-allowed select-none relative group"
+                          aria-disabled="true"
+                          title="Coming Soon"
                         >
                           {icon} {platform}
-                        </a>
+                          <span className="absolute -top-7 left-1/2 -translate-x-1/2 bg-[var(--bg-elevated)] border border-[var(--border-default)] text-[var(--text-secondary)] text-xs rounded px-2 py-0.5 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                            Coming Soon
+                          </span>
+                        </span>
                       ))}
                     </div>
                   </div>

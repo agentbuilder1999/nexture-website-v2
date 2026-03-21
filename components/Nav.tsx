@@ -78,7 +78,11 @@ export default function Nav() {
             <Link
               key={href}
               href={href}
-              className="block text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] py-1.5"
+              className={`block text-sm font-medium py-1.5 px-3 rounded-lg transition-colors ${
+                pathname === href
+                  ? 'bg-[rgba(154,129,223,0.22)] text-[var(--text-primary)]'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+              }`}
               onClick={() => setOpen(false)}
             >
               {label}

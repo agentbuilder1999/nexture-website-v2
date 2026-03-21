@@ -1,13 +1,12 @@
-import type { Metadata } from 'next';
+'use client';
+import { useState, FormEvent } from 'react';
 import Link from 'next/link';
 import SectionWrapper from '@/components/SectionWrapper';
 import GradientText from '@/components/GradientText';
 import HeroBackground from '@/components/HeroBackground';
 
-export const metadata: Metadata = {
-  title: 'TheraSeus — AI Capsule Endoscopy | Nexture',
-  description: 'TheraSeus cuts capsule endoscopy review time by 90%. CADe tool for gastroenterologists. Not for primary diagnosis.',
-};
+// TODO: replace with real Formspree form ID — register at https://formspree.io
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
 
 const personas = [
   { emoji: '👨‍⚕️', role: 'Gastroenterologist', headline: '6 minutes instead of 60', desc: 'Spend your cognitive energy on diagnosis, not scanning through 55,000 frames. AI surfaces the top 1,250 priority frames — you confirm the findings.' },
@@ -23,8 +22,50 @@ const technology = [
 ];
 
 export default function ProductPage() {
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [toast, setToast] = useState('');
+
+  const showToast = (msg: string, isError = false) => {
+    setToast(msg);
+    setTimeout(() => setToast(''), 4000);
+    setStatus(isError ? 'error' : 'success');
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setStatus('sending');
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    try {
+      const res = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        body: data,
+        headers: { Accept: 'application/json' },
+      });
+      if (res.ok) {
+        form.reset();
+        showToast('✅ Request received! We\'ll be in touch shortly.');
+      } else {
+        showToast('❌ Failed to send. Please email us directly.', true);
+      }
+    } catch {
+      showToast('❌ Network error. Please email us directly.', true);
+    }
+  };
+
   return (
     <>
+      {/* Toast notification */}
+      {toast && (
+        <div
+          className={`fixed top-20 left-1/2 -translate-x-1/2 z-[100] px-5 py-3 rounded-lg shadow-lg text-sm font-medium transition-all ${
+            status === 'success' ? 'bg-[var(--primary)] text-white' : 'bg-red-600 text-white'
+          }`}
+        >
+          {toast}
+        </div>
+      )}
+
       {/* Hero */}
       <section className="relative min-h-[50vh] flex items-center overflow-hidden pt-16 bg-[var(--bg-section-alt)]">
         <HeroBackground type="section" opacity={0.3} />
@@ -33,13 +74,18 @@ export default function ProductPage() {
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--border-default)] bg-[var(--bg-card)] text-xs font-semibold text-[var(--accent-rose)] mb-6">
               ⚕️ CADe Tool — Not for Primary Diagnosis
             </div>
+            {/* Primary product CTA uses btn-teal (highest weight) */}
             <GradientText as="h1" className="text-5xl md:text-6xl font-extrabold mb-4">TheraSeus</GradientText>
             <p className="text-xl text-[var(--text-secondary)] max-w-2xl">
               AI-powered capsule endoscopy assistant. Filters 55,000 frames to the 1,250 that matter most, enabling review in 6 minutes.
             </p>
+            <div className="mt-6">
+              <Link href="#demo" className="btn-teal">Request a Demo →</Link>
+            </div>
           </SectionWrapper>
         </div>
       </section>
+
       {/* Personas */}
       <section className="section">
         <div className="container mx-auto">
@@ -53,7 +99,7 @@ export default function ProductPage() {
                 <div className="card h-full">
                   <span className="text-4xl mb-4 block">{emoji}</span>
                   <p className="text-xs font-semibold text-[var(--primary)] uppercase tracking-widest mb-1">{role}</p>
-                  <h3 className="text-xl font-bold text-[var(--text-heading)] mb-3">"{headline}"</h3>
+                  <h3 className="text-xl font-bold text-[var(--text-heading)] mb-3">&ldquo;{headline}&rdquo;</h3>
                   <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{desc}</p>
                 </div>
               </SectionWrapper>
@@ -115,20 +161,21 @@ export default function ProductPage() {
         </div>
       </section>
 
-      {/* CTA / Demo Form */}
-      <section className="section bg-[var(--bg-section-alt)]">
+      {/* CTA / Demo Form — #2 Formspree */}
+      <section id="demo" className="section bg-[var(--bg-section-alt)]">
         <div className="container mx-auto max-w-2xl">
           <SectionWrapper className="text-center mb-10">
             <GradientText as="h2" className="text-4xl font-extrabold mb-3">Request a Demo</GradientText>
             <p className="text-[var(--text-secondary)]">See TheraSeus in action with your own study data.</p>
           </SectionWrapper>
           <SectionWrapper>
-            <form action="mailto:hello@nexture.nz" method="get" encType="text/plain" className="card space-y-4">
+            <form onSubmit={handleSubmit} className="card space-y-4">
+              <input type="hidden" name="_replyto" value="victor@nexture.nz" />
               <div className="grid sm:grid-cols-2 gap-4">
                 {[['Name','name','Your name'],['Email','email','you@hospital.com'],['Organization','org','Hospital or practice'],['Role','role','e.g. Gastroenterologist']].map(([label,name,placeholder]) => (
                   <div key={name}>
                     <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1.5">{label}</label>
-                    <input name={name} placeholder={placeholder} className="w-full bg-[var(--bg-elevated)] border border-[var(--border-default)] rounded-[var(--radius-md)] px-3 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--border-focus)] transition-colors" />
+                    <input name={name} placeholder={placeholder} required={name === 'name' || name === 'email'} className="w-full bg-[var(--bg-elevated)] border border-[var(--border-default)] rounded-[var(--radius-md)] px-3 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--border-focus)] transition-colors" />
                   </div>
                 ))}
               </div>
@@ -136,7 +183,13 @@ export default function ProductPage() {
                 <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1.5">Message</label>
                 <textarea name="message" rows={3} placeholder="Tell us about your practice and what you're looking for..." className="w-full bg-[var(--bg-elevated)] border border-[var(--border-default)] rounded-[var(--radius-md)] px-3 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--border-focus)] transition-colors resize-none" />
               </div>
-              <button type="submit" className="btn-teal w-full justify-center">Send Request →</button>
+              <button
+                type="submit"
+                disabled={status === 'sending'}
+                className="btn-teal w-full justify-center disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {status === 'sending' ? 'Sending…' : 'Send Request →'}
+              </button>
               <p className="text-xs text-[var(--text-muted)] text-center">TheraSeus is a CADe device. Not intended for primary diagnosis.</p>
             </form>
           </SectionWrapper>

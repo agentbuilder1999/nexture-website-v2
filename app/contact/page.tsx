@@ -1,12 +1,10 @@
-import type { Metadata } from 'next';
+'use client';
+import { useState, FormEvent } from 'react';
 import SectionWrapper from '@/components/SectionWrapper';
 import GradientText from '@/components/GradientText';
 import HeroBackground from '@/components/HeroBackground';
 
-export const metadata: Metadata = {
-  title: 'Contact — Nexture',
-  description: 'Get in touch with Nexture. Based in Christchurch, New Zealand.',
-};
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mgonqqdn';
 
 const contactDetails = [
   { icon: '✉️', label: 'Email', value: 'hello@nexture.nz', href: 'mailto:hello@nexture.nz' },
@@ -15,8 +13,53 @@ const contactDetails = [
 ];
 
 export default function ContactPage() {
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [toast, setToast] = useState('');
+
+  const showToast = (msg: string, isError = false) => {
+    setToast(msg);
+    setTimeout(() => setToast(''), 4000);
+    setStatus(isError ? 'error' : 'success');
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setStatus('sending');
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    try {
+      const res = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        body: data,
+        headers: { Accept: 'application/json' },
+      });
+      if (res.ok) {
+        form.reset();
+        showToast('✅ Message sent! We\'ll be in touch shortly.');
+      } else {
+        showToast('❌ Failed to send. Please email us directly.', true);
+      }
+    } catch {
+      showToast('❌ Network error. Please email us directly.', true);
+    }
+  };
+
   return (
     <>
+      {/* Toast notification */}
+      {toast && (
+        <div
+          className={`fixed top-20 left-1/2 -translate-x-1/2 z-[100] px-5 py-3 rounded-lg shadow-lg text-sm font-medium transition-all ${
+            status === 'success'
+              ? 'bg-[var(--primary)] text-white'
+              : 'bg-red-600 text-white'
+          }`}
+        >
+          {toast}
+        </div>
+      )}
+
       {/* Hero */}
       <section className="relative min-h-[40vh] flex items-center overflow-hidden pt-16 bg-[var(--bg-section-alt)]">
         <HeroBackground type="section" opacity={0.25} />
@@ -37,12 +80,9 @@ export default function ContactPage() {
             {/* Contact form */}
             <SectionWrapper>
               <h2 className="text-2xl font-bold text-[var(--text-heading)] mb-6">Send a Message</h2>
-              <form
-                action="mailto:hello@nexture.nz"
-                method="get"
-                encType="text/plain"
-                className="space-y-4"
-              >
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Hidden Formspree email target */}
+                <input type="hidden" name="_replyto" value="victor@nexture.nz" />
                 {[
                   { label: 'Name', name: 'name', type: 'text', placeholder: 'Your full name' },
                   { label: 'Email', name: 'email', type: 'email', placeholder: 'you@hospital.com' },
@@ -51,7 +91,7 @@ export default function ContactPage() {
                   <div key={name}>
                     <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1.5">{label}</label>
                     <input
-                      type={type} name={name} placeholder={placeholder}
+                      type={type} name={name} placeholder={placeholder} required={name !== 'organisation'}
                       className="w-full bg-[var(--bg-card)] border border-[var(--border-default)] rounded-[var(--radius-md)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--border-focus)] transition-colors"
                     />
                   </div>
@@ -59,12 +99,18 @@ export default function ContactPage() {
                 <div>
                   <label className="block text-xs font-semibold text-[var(--text-secondary)] mb-1.5">Message</label>
                   <textarea
-                    name="body" rows={4}
+                    name="message" rows={4} required
                     placeholder="Tell us what you're interested in..."
                     className="w-full bg-[var(--bg-card)] border border-[var(--border-default)] rounded-[var(--radius-md)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--border-focus)] transition-colors resize-none"
                   />
                 </div>
-                <button type="submit" className="btn-teal w-full justify-center">Send Message →</button>
+                <button
+                  type="submit"
+                  disabled={status === 'sending'}
+                  className="btn-teal w-full justify-center disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {status === 'sending' ? 'Sending…' : 'Send Message →'}
+                </button>
               </form>
             </SectionWrapper>
 
@@ -98,7 +144,7 @@ export default function ContactPage() {
                   <p className="text-sm text-[var(--text-secondary)] mb-4">
                     Schedule a 30-minute video call to discuss TheraSeus and how it can fit your practice.
                   </p>
-                  <a href="mailto:hello@nexture.nz?subject=Book a Call" className="btn-primary text-sm py-2 px-5">
+                  <a href="mailto:hello@nexture.nz?subject=Book a Call" className="btn-secondary text-sm py-2 px-5">
                     Book a Catch-Up →
                   </a>
                 </div>
