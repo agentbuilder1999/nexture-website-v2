@@ -4,8 +4,7 @@ import SectionWrapper from '@/components/SectionWrapper';
 import GradientText from '@/components/GradientText';
 import HeroBackground from '@/components/HeroBackground';
 
-// TODO: replace with real Formspree form ID — register at https://formspree.io
-const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mgonqqdn';
 
 const contactDetails = [
   { icon: '✉️', label: 'Email', value: 'hello@nexture.nz', href: 'mailto:hello@nexture.nz' },
