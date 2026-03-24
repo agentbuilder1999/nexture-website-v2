@@ -1,35 +1,11 @@
 'use client';
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import HeroBackground from '@/components/HeroBackground';
-import SectionWrapper from '@/components/SectionWrapper';
-import GradientText from '@/components/GradientText';
-import PartnerLogos from '@/components/PartnerLogos';
-import HeroParticles from '@/components/HeroParticles';
-// WaveLayer removed per Victor request (2026-03-16)
+import { useEffect, useRef, useState } from 'react';
+import ScrollReveal from '@/components/ScrollReveal';
 
-const stats = [
-  { value: 90, suffix: '%', label: 'Review Time Saved' },
-  { value: 135, prefix: '$', label: 'Per Case — No Upfront Cost' },
-  { value: 55000, suffix: '+', label: 'Frames Analysed Per Study' },
-];
-
-const features = [
-  { icon: '⏱', title: 'Save 90% Time', desc: 'From 60 minutes down to 6. AI prioritises the most critical frames for your review.' },
-  { icon: '🏥', title: 'No New Equipment', desc: 'Works with your existing Medtronic, Olympus, and Jinshan capsule endoscopy systems.' },
-  { icon: '💰', title: 'From $135/Case', desc: 'Pay-per-case pricing. Immediate ROI — each case saves $200+ in physician time.' },
-  { icon: '🔒', title: 'HIPAA Compliant', desc: 'Cloud or on-premise deployment. PHI de-identified locally before AI processing.' },
-];
-
-const steps = [
-  { num: '01', title: 'Upload Study', desc: 'Upload your capsule endoscopy study directly or connect your workstation.' },
-  { num: '02', title: 'AI Filters 55,000 Frames', desc: 'TheraSeus AI analyses every frame and surfaces the 1,250 most clinically relevant.' },
-  { num: '03', title: 'Review & Report in 6 Min', desc: 'Doctor reviews AI-prioritised findings, confirms, and generates a signed report.' },
-];
-
-// ── CountUp hook using IntersectionObserver ──────────────────
-function useCountUp(target: number, duration = 2000, triggered = false) {
+/* ── CountUp hook ───────────────────────────────────────── */
+function useCountUp(target: number, duration = 1400, triggered = false) {
   const [count, setCount] = useState(0);
   useEffect(() => {
     if (!triggered) return;
@@ -37,7 +13,6 @@ function useCountUp(target: number, duration = 2000, triggered = false) {
     const step = (ts: number) => {
       if (!start) start = ts;
       const progress = Math.min((ts - start) / duration, 1);
-      // ease-out cubic
       const eased = 1 - Math.pow(1 - progress, 3);
       setCount(Math.floor(eased * target));
       if (progress < 1) requestAnimationFrame(step);
@@ -47,300 +22,582 @@ function useCountUp(target: number, duration = 2000, triggered = false) {
   return count;
 }
 
-function StatCard({ value, suffix, prefix, label }: { value: number; suffix?: string; prefix?: string; label: string }) {
+function StatCard({
+  value, suffix, prefix, label, desc
+}: { value: number; suffix?: string; prefix?: string; label: string; desc: string }) {
   const [triggered, setTriggered] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const count = useCountUp(value, 2000, triggered);
+  const count = useCountUp(value, 1400, triggered);
+  const formatted = count >= 1000 ? count.toLocaleString() : count.toString();
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const obs = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) { setTriggered(true); obs.disconnect(); }
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { setTriggered(true); obs.disconnect(); }
     }, { threshold: 0.3 });
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
 
-  // Format large numbers with commas
-  const formatted = count >= 1000 ? count.toLocaleString() : count.toString();
-
   return (
-    <div ref={ref}>
-      <p className="text-4xl font-extrabold gradient-text mb-1">
-        {prefix}{formatted}{suffix}
-      </p>
-      <p className="text-sm text-[var(--text-secondary)]">{label}</p>
+    <div ref={ref} className="stat-card">
+      <span className="stat-number">{prefix}{formatted}{suffix}</span>
+      <span className="stat-label">{label}</span>
+      <span className="stat-desc">{desc}</span>
     </div>
   );
 }
 
-// ── Wistia embed block (replaces local introhome.mp4) ────────
-// media-id: 3bhr3pi6rc | aspect: 16:9
-function WistiaBlock({ className }: { className?: string }) {
+/* ── Audience card ──────────────────────────────────────── */
+function AudienceCard({ emoji, role, quote, cta, href }: {
+  emoji: string; role: string; quote: string; cta: string; href: string;
+}) {
   return (
-    <div className={`relative ${className ?? ''}`}>
-      {/* eslint-disable-next-line @next/next/no-before-interactive-script-in-document */}
-      <script src="https://fast.wistia.com/player.js" async />
-      <script src="https://fast.wistia.com/embed/3bhr3pi6rc.js" async type="module" />
-      {/* @ts-expect-error — wistia-player is a custom element */}
-      <wistia-player
-        media-id="3bhr3pi6rc"
-        aspect="1.7777777777777777"
-        style={{ width: '100%', height: '100%' }}
-      />
+    <div className="feature-card-light flex flex-col gap-4 h-full">
+      <div className="flex items-center gap-3">
+        <span className="text-2xl" aria-hidden="true">{emoji}</span>
+        <span className="text-label" style={{ color: 'var(--color-accent-soft)' }}>{role}</span>
+      </div>
+      <p className="text-lg font-semibold leading-snug flex-1" style={{ color: 'var(--text-on-light-primary)', fontFamily: 'var(--font-display)' }}>
+        &ldquo;{quote}&rdquo;
+      </p>
+      <Link href={href} className="btn-ghost-light text-sm py-2.5 px-5 self-start">
+        {cta} →
+      </Link>
+    </div>
+  );
+}
+
+/* ── Partner logo row ───────────────────────────────────── */
+function PartnerLogos() {
+  const logos = [
+    { src: '/assets/logo-google-cloud.png',      alt: 'Google Cloud Partner' },
+    { src: '/assets/logo-ministry-awesome.png',  alt: 'Ministry of Awesome' },
+    { src: '/assets/logo-nvidia.png',            alt: 'NVIDIA Inception' },
+  ];
+  return (
+    <div className="partner-row">
+      {logos.map(({ src, alt }) => (
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img key={src} src={src} alt={alt} className="partner-logo" style={{ height: 36 }}
+          onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
+        />
+      ))}
+      {/* Text fallbacks for missing logos */}
+      <span className="trust-badge">AWS Healthcare</span>
+      <span className="trust-badge">Ministry of Awesome</span>
+      <span className="trust-badge">University of Otago</span>
     </div>
   );
 }
 
 export default function HomePage() {
-  useEffect(() => {
-    const els = document.querySelectorAll('.word-reveal');
-    const obs = new IntersectionObserver(
-      (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('revealed'); }),
-      { threshold: 0.1 }
-    );
-    els.forEach(el => obs.observe(el));
-    return () => obs.disconnect();
-  }, []);
-
   return (
     <>
-      {/* ─── HERO ─────────────────────────────────────────────────── */}
-      <section className="relative min-h-screen flex items-center overflow-hidden pt-16">
-
-        {/* Layer 0 — Neural_Sieve base illustration */}
-        <div className="absolute inset-0 z-0">
+      {/* ════════════════════════════════════════════════════
+          HERO — Dark, full-viewport
+          ════════════════════════════════════════════════════ */}
+      <section className="section-dark relative min-h-screen flex items-center overflow-hidden pt-16">
+        {/* Atmospheric bg — Purple-bfg at low opacity */}
+        <div className="absolute inset-0 z-0 pointer-events-none" aria-hidden="true">
           <Image
-            src="/assets/neural-sieve-2.png"
+            src="/assets/Purple-bfg.avif"
             alt=""
             fill
             priority
-            quality={85}
+            quality={60}
             className="object-cover object-center"
-            style={{ opacity: 0.35 }}
+            style={{ opacity: 0.12 }}
             sizes="100vw"
-            aria-hidden="true"
           />
         </div>
+        {/* Subtle bottom gradient fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-48 pointer-events-none z-[2]" aria-hidden="true"
+          style={{ background: 'linear-gradient(to bottom, transparent, var(--bg-dark-deep))' }} />
 
-        {/* Layer 1 — WaveLayer removed per Victor request (2026-03-16) */}
+        <div className="section-container px-6 py-24 md:py-32 relative z-10 w-full">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left: copy */}
+            <div>
+              {/* NVIDIA badge */}
+              <div className="flex flex-wrap gap-2 mb-7 animate-fade-up" style={{ animationDelay: '0ms' }}>
+                <span className="trust-badge">🏆 NVIDIA Inception Member</span>
+                <span className="trust-badge">🔒 HIPAA-Ready</span>
+                <span className="trust-badge">🇳🇿 Medsafe SaMD</span>
+              </div>
 
-        {/* Layer 2 — hero-web.mp4 video (subtle motion) */}
-        <video
-          autoPlay muted loop playsInline
-          className="absolute inset-0 w-full h-full object-cover z-[2]"
-          style={{ opacity: 0.5 }}
-          aria-hidden="true"
-        >
-          <source src="/assets/hero-web.mp4" type="video/mp4" />
-        </video>
+              {/* Headline */}
+              <h1
+                className="font-display font-extrabold leading-tight mb-6 animate-fade-up"
+                style={{
+                  fontSize: 'clamp(2.5rem, 5.5vw, 4.5rem)',
+                  letterSpacing: '-0.03em',
+                  lineHeight: 1.1,
+                  animationDelay: '80ms',
+                  color: 'var(--text-on-dark-primary)',
+                }}
+              >
+                Capsule Endoscopy AI That{' '}
+                <span className="gradient-text">Cuts Review Time by 90%</span>
+              </h1>
 
-        {/* Layer 2 — ShaderGradient (opacity 0.55, per spec) */}
-        <HeroBackground type="hero" opacity={0.55} />
+              {/* Subheadline */}
+              <p
+                className="text-lg leading-relaxed mb-8 animate-fade-up"
+                style={{ color: 'var(--text-on-dark-secondary)', maxWidth: '520px', animationDelay: '200ms' }}
+              >
+                From 60-minute physician burden to 6-minute precision review.
+                TheraSeus filters 50,000 images down to what matters — automatically.
+              </p>
 
-        {/* Layer 3 — Particle field (120 particles, purple-pink-amber palette) */}
-        <HeroParticles />
+              {/* CTAs */}
+              <div className="flex flex-wrap gap-4 mb-12 animate-fade-up" style={{ animationDelay: '320ms' }}>
+                <Link href="/contact" className="btn-primary">
+                  Book a Demo →
+                </Link>
+                <Link href="/product" className="btn-secondary">
+                  See How It Works
+                </Link>
+              </div>
 
-        {/* Layer 3 — text content */}
-        <div className="relative z-10 container mx-auto px-[var(--px-page)] py-24 md:py-32">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--border-default)] bg-[var(--bg-card)] text-xs font-semibold text-[var(--accent-purple)] mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary)] animate-pulse" />
-              Now Available — NZ &amp; US Healthcare
+              {/* Micro-stat row */}
+              <div
+                className="flex flex-wrap gap-x-6 gap-y-2 text-sm animate-fade-up"
+                style={{ animationDelay: '440ms', color: 'var(--text-on-dark-muted)', borderTop: '1px solid var(--border-dark)', paddingTop: '1.5rem' }}
+              >
+                {[
+                  '90% time saved',
+                  '$200 net savings/case',
+                  'No hardware changes',
+                  '50 cases FREE pilot',
+                ].map(item => (
+                  <span key={item} className="flex items-center gap-1.5">
+                    <span style={{ color: 'var(--color-data-primary)' }}>—</span>
+                    {item}
+                  </span>
+                ))}
+              </div>
             </div>
 
-            {/* #9 — Hero H1 gradient: both lines use gradient-text */}
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-10 hero-title">
-              <span className="gradient-text word-reveal" style={{transitionDelay:'0ms'}}>Pushing</span>{' '}
-              <span className="gradient-text word-reveal" style={{transitionDelay:'80ms'}}>the</span>{' '}
-              <span className="gradient-text word-reveal" style={{transitionDelay:'160ms'}}>Boundaries</span>
-              <br />
-              <span className="gradient-text word-reveal" style={{transitionDelay:'240ms'}}>of AI</span>
-            </h1>
-
-            <div className="flex flex-wrap gap-4">
-              <Link href="/contact" className="btn-teal">Request a Demo</Link>
-              <Link href="/product" className="btn-ghost">Learn More →</Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom page-fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[var(--bg-page)] to-transparent z-10 pointer-events-none" />
-      </section>
-
-      {/* ─── STATS BAR ────────────────────────────────────────────── */}
-      {/* #7 — CountUp animation on scroll */}
-      <section className="bg-[var(--bg-card)] border-y border-[var(--border-subtle)] px-[var(--px-page)] py-8">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
-            {stats.map(({ value, suffix, prefix, label }) => (
-              <StatCard key={label} value={value} suffix={suffix} prefix={prefix} label={label} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ─── INTRO VIDEO (below Hero) ─────────────────────────────── */}
-      {/* #15 — Wistia embed replaces local introhome.mp4 (was 53MB, exceeded Vercel limit) */}
-      <section className="w-full overflow-hidden bg-[var(--bg-section-alt)]" style={{ maxHeight: '60vh' }}>
-        <WistiaBlock className="w-full" />
-      </section>
-
-      {/* ─── PRODUCT INTRO (TheraSeus + Funnel_Collapse) ──────────── */}
-      <section className="section bg-texture relative">
-        <div className="container mx-auto relative z-10">
-          <SectionWrapper className="text-center mb-12">
-            <p className="text-sm font-semibold text-[var(--primary)] uppercase tracking-widest mb-3">Our Product</p>
-            <GradientText as="h2" className="text-4xl md:text-5xl font-extrabold mb-4 text-center">Meet TheraSeus</GradientText>
-            <p className="text-lg text-[var(--text-secondary)] max-w-2xl mx-auto">
-              AI-powered capsule endoscopy workflow. From 60 minutes to 6.
-              More patients. Better outcomes. Same equipment.
-            </p>
-          </SectionWrapper>
-
-          <div className="grid md:grid-cols-2 gap-10 items-center">
-            {/* Feature cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {features.map(({ icon, title, desc }, i) => (
-                <SectionWrapper key={title} delay={i * 0.1}>
-                  <div className="card h-full">
-                    <span className="text-3xl mb-3 block">{icon}</span>
-                    <h3 className="text-base font-bold text-[var(--text-heading)] mb-2">{title}</h3>
-                    <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{desc}</p>
-                  </div>
-                </SectionWrapper>
-              ))}
-            </div>
-
-            {/* Funnel_Collapse illustration — mix-blend-mode: screen */}
-            <SectionWrapper delay={0.2}>
-              <div className="relative rounded-2xl overflow-hidden bg-[var(--bg-section-alt)]"
-                   style={{ minHeight: 320 }}>
-                {/* intro video behind */}
-                <video
-                  autoPlay muted loop playsInline
-                  className="absolute inset-0 w-full h-full object-cover opacity-30"
-                  aria-hidden="true"
-                >
-                  <source src="/assets/intro.mp4" type="video/mp4" />
-                </video>
-
-                {/* Funnel_Collapse AI image with screen blend */}
-                <div className="relative w-full" style={{ aspectRatio: '4/3' }}>
-                  <Image
-                    src="/assets/funnel-collapse.png"
-                    alt="TheraSeus AI filters 55,000 capsule endoscopy frames to the 1,250 most clinically relevant"
-                    fill
-                    quality={85}
-                    className="object-contain object-center"
-                    style={{ mixBlendMode: 'screen', opacity: 0.9, filter: 'brightness(1.2) contrast(1.1)' }}
-                    sizes="100vw"
-                    priority
-                  />
+            {/* Right: Neural_Sieve UI mockup */}
+            <div className="relative animate-fade-in" style={{ animationDelay: '300ms' }}>
+              <div
+                className="relative rounded-2xl overflow-hidden"
+                style={{
+                  border: '1px solid var(--border-dark-strong)',
+                  boxShadow: '0 0 80px rgba(74, 92, 232, 0.15), 0 40px 80px rgba(0,0,0,0.5)',
+                  background: 'var(--bg-dark-surface)',
+                }}
+              >
+                <Image
+                  src="/assets/neural-sieve.png"
+                  alt="TheraSeus AI interface showing capsule endoscopy analysis"
+                  width={620}
+                  height={420}
+                  className="w-full h-auto"
+                  priority
+                  quality={90}
+                />
+                {/* Annotation callouts */}
+                <div className="absolute top-4 left-4 trust-badge" style={{ fontSize: '10px' }}>
+                  AI-filtered 4,800 frames
                 </div>
-
-                {/* Caption overlay */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[var(--bg-section-alt)] to-transparent">
-                  <p className="text-xs text-[var(--text-muted)] italic text-center">
-                    TheraSeus — AI-assisted capsule endoscopy. Not for primary diagnosis.
-                  </p>
+                <div className="absolute bottom-6 right-4 trust-badge" style={{ fontSize: '10px', borderColor: 'rgba(16,185,129,0.4)', color: 'var(--color-data-positive)' }}>
+                  95% confidence — Active Bleeding
                 </div>
               </div>
-            </SectionWrapper>
+              {/* Floating glow effect */}
+              <div className="absolute -inset-10 pointer-events-none z-[-1]" aria-hidden="true"
+                style={{ background: 'radial-gradient(ellipse at center, rgba(74,92,232,0.10) 0%, transparent 70%)' }} />
+            </div>
           </div>
-
-          <SectionWrapper className="text-center mt-10">
-            {/* #8 — Secondary CTA uses btn-secondary */}
-            <Link href="/product" className="btn-secondary">Explore TheraSeus →</Link>
-          </SectionWrapper>
         </div>
       </section>
 
-      {/* ─── HOW IT WORKS ─────────────────────────────────────────── */}
-      <section className="section bg-[var(--bg-section-alt)]">
-        <div className="container mx-auto">
-          <SectionWrapper className="text-center mb-12">
-            <GradientText as="h2" className="text-4xl md:text-5xl font-extrabold mb-4">How It Works</GradientText>
-            <p className="text-[var(--text-secondary)] max-w-xl mx-auto">
-              Three steps from study upload to signed report.
+      {/* ════════════════════════════════════════════════════
+          SOCIAL PROOF BAR — Light
+          ════════════════════════════════════════════════════ */}
+      <section className="section-light py-10">
+        <div className="section-container px-6">
+          <ScrollReveal className="text-center mb-7">
+            <p className="text-sm font-semibold uppercase tracking-wider" style={{ color: 'var(--text-on-light-muted)', letterSpacing: '0.08em' }}>
+              Backed by and built with
             </p>
-          </SectionWrapper>
+          </ScrollReveal>
+          <ScrollReveal delay={1}>
+            <div className="partner-row">
+              {[
+                { src: '/assets/logo-google-cloud.png', alt: 'Google Cloud Partner', fallback: 'Google Cloud' },
+                { src: '/assets/logo-ministry-awesome.png', alt: 'Ministry of Awesome', fallback: 'Ministry of Awesome' },
+              ].map(({ src, alt, fallback }) => (
+                <div key={src} className="flex items-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={src}
+                    alt={alt}
+                    style={{ height: 36, objectFit: 'contain', filter: 'grayscale(100%) brightness(0.25)', opacity: 0.7 }}
+                    onError={e => {
+                      const el = e.target as HTMLImageElement;
+                      el.style.display = 'none';
+                      const span = document.createElement('span');
+                      span.textContent = fallback;
+                      span.style.cssText = 'font-size:0.875rem;font-weight:600;color:var(--text-on-light-muted);';
+                      el.parentNode?.appendChild(span);
+                    }}
+                  />
+                </div>
+              ))}
+              <span className="trust-badge" style={{ background: 'rgba(0,0,0,0.05)', border: '1px solid rgba(0,0,0,0.12)', color: 'var(--text-on-light-secondary)' }}>NVIDIA Inception</span>
+              <span className="trust-badge" style={{ background: 'rgba(0,0,0,0.05)', border: '1px solid rgba(0,0,0,0.12)', color: 'var(--text-on-light-secondary)' }}>AWS Healthcare</span>
+              <span className="trust-badge" style={{ background: 'rgba(0,0,0,0.05)', border: '1px solid rgba(0,0,0,0.12)', color: 'var(--text-on-light-secondary)' }}>University of Otago</span>
+              <span className="trust-badge" style={{ background: 'rgba(0,0,0,0.05)', border: '1px solid rgba(0,0,0,0.12)', color: 'var(--text-on-light-secondary)' }}>Ara Institute</span>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {steps.map(({ num, title, desc }, i) => (
-              <SectionWrapper key={num} delay={i * 0.15}>
-                <div className="card relative overflow-hidden">
-                  <div className="text-6xl font-extrabold text-[var(--border-subtle)] absolute top-4 right-4 select-none font-mono">
-                    {num}
+      {/* ════════════════════════════════════════════════════
+          PROBLEM SECTION — Dark
+          ════════════════════════════════════════════════════ */}
+      <section className="section-dark-surface section-py">
+        <div className="section-container px-6">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left: copy */}
+            <div>
+              <ScrollReveal>
+                <p className="text-label mb-4">The Challenge</p>
+                <h2 className="font-display font-bold mb-6" style={{ fontSize: 'clamp(1.875rem, 3.5vw, 3rem)', letterSpacing: '-0.02em', lineHeight: 1.15, color: 'var(--text-on-dark-primary)' }}>
+                  Gastroenterologists Spend 1 Hour Per Case on Non-Diagnostic Work
+                </h2>
+                <p className="text-lg leading-relaxed mb-10" style={{ color: 'var(--text-on-dark-secondary)' }}>
+                  Each capsule endoscopy study floods the physician with 50,000+ images.
+                  Manual review burns 45–60 minutes per case — time taken from patients, from life.
+                </p>
+              </ScrollReveal>
+
+              <div className="grid grid-cols-3 gap-4">
+                {[
+                  { num: '50,000+', label: 'Images Per Case', desc: 'Manual review required' },
+                  { num: '33%',     label: 'Cite Review As Burnout', desc: 'Among gastroenterologists' },
+                  { num: '60 min',  label: 'Per Case Wasted', desc: 'Non-diagnostic time' },
+                ].map(({ num, label, desc }, i) => (
+                  <ScrollReveal key={label} delay={(i + 1) as 1 | 2 | 3}>
+                    <div style={{ borderTop: '2px solid var(--color-cta)', paddingTop: '0.75rem' }}>
+                      <p className="font-mono font-bold text-2xl mb-1" style={{ color: 'var(--text-on-dark-primary)' }}>{num}</p>
+                      <p className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: 'var(--text-on-dark-secondary)', letterSpacing: '0.06em' }}>{label}</p>
+                      <p className="text-xs" style={{ color: 'var(--text-on-dark-muted)' }}>{desc}</p>
+                    </div>
+                  </ScrollReveal>
+                ))}
+              </div>
+            </div>
+
+            {/* Right: Funnel_Collapse image */}
+            <ScrollReveal delay={2}>
+              <div className="relative rounded-xl overflow-hidden" style={{ background: 'var(--bg-dark-elevated)', border: '1px solid var(--border-dark)' }}>
+                <Image
+                  src="/assets/funnel-collapse.png"
+                  alt="TheraSeus filters 50,000 capsule endoscopy frames down to clinically relevant findings"
+                  width={560}
+                  height={420}
+                  className="w-full h-auto"
+                  style={{ mixBlendMode: 'screen', opacity: 0.85, filter: 'brightness(1.1)' }}
+                  quality={85}
+                />
+                <p className="text-xs text-center py-3" style={{ color: 'var(--text-on-dark-muted)' }}>
+                  50,000 images → 5,000 prioritised frames
+                </p>
+              </div>
+            </ScrollReveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════
+          SOLUTION SECTION — Light
+          ════════════════════════════════════════════════════ */}
+      <section className="section-light section-py">
+        <div className="section-container px-6">
+          <ScrollReveal className="text-center mb-14">
+            <p className="text-label mb-4" style={{ color: 'var(--color-cta)' }}>TheraSeus by Nexture</p>
+            <h2 className="font-display font-bold mb-5" style={{ fontSize: 'clamp(1.875rem, 3.5vw, 3rem)', letterSpacing: '-0.02em', lineHeight: 1.15, color: 'var(--text-on-light-primary)' }}>
+              Three Steps to a Complete GI Report
+            </h2>
+            <p className="text-lg max-w-2xl mx-auto" style={{ color: 'var(--text-on-light-secondary)' }}>
+              Works with PillCam, EndoCapsule, NaviCam, and all major systems. No hardware changes required.
+            </p>
+          </ScrollReveal>
+
+          <div className="grid md:grid-cols-3 gap-6 lg:gap-8 relative">
+            {/* Connector line (desktop) */}
+            <div className="hidden md:block absolute top-[42px] left-[calc(33.33%+8px)] right-[calc(33.33%+8px)] h-0.5"
+              style={{ background: 'linear-gradient(to right, var(--border-light-accent), var(--color-cta), var(--border-light-accent))', zIndex: 0 }} aria-hidden="true" />
+
+            {[
+              {
+                step: '01',
+                title: 'Upload Study',
+                time: '~2 minutes',
+                desc: 'Drag-and-drop MP4, AVI, DICOM, or JPEG series. Any major capsule endoscope supported.',
+                icon: '📤',
+              },
+              {
+                step: '02',
+                title: 'AI Analysis',
+                time: '~5 minutes automated',
+                desc: 'Quality filtering, YOLOv8-x lesion detection, SAM2 segmentation, and structured report auto-draft.',
+                icon: '🤖',
+              },
+              {
+                step: '03',
+                title: 'Doctor Review',
+                time: '8–20 minutes',
+                desc: 'Review AI-filtered frames (~5,000). Confirm, edit, or override AI findings. Sign report → Export to EMR/PACS.',
+                icon: '🩺',
+              },
+            ].map(({ step, title, time, desc, icon }, i) => (
+              <ScrollReveal key={step} delay={(i + 1) as 1 | 2 | 3} className="relative z-10">
+                <div className="feature-card-light flex flex-col gap-4 text-center items-center">
+                  <div className="w-14 h-14 rounded-full flex items-center justify-center font-mono font-bold text-lg text-white"
+                    style={{ background: 'var(--color-cta)' }}>
+                    {step}
                   </div>
-                  <div className="relative z-10">
-                    <p className="text-xs font-semibold text-[var(--primary)] uppercase tracking-widest mb-2">Step {num}</p>
-                    <h3 className="text-lg font-bold text-[var(--text-heading)] mb-3">{title}</h3>
-                    <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{desc}</p>
+                  <span className="text-2xl" aria-hidden="true">{icon}</span>
+                  <div>
+                    <h3 className="font-display font-semibold text-xl mb-1" style={{ color: 'var(--text-on-light-primary)' }}>{title}</h3>
+                    <p className="text-sm font-semibold mb-2" style={{ color: 'var(--color-cta)' }}>{time}</p>
+                    <p className="text-sm leading-relaxed" style={{ color: 'var(--text-on-light-secondary)' }}>{desc}</p>
                   </div>
                 </div>
-              </SectionWrapper>
+              </ScrollReveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ─── PARTNER LOGOS ────────────────────────────────────────── */}
-      <section className="section-sm bg-[var(--bg-page)]">
-        <div className="container mx-auto">
-          <SectionWrapper className="text-center">
-            <p className="text-sm font-semibold text-[var(--text-tertiary)] uppercase tracking-widest mb-8">
-              Trusted &amp; Supported By
-            </p>
-            <PartnerLogos />
-          </SectionWrapper>
+      {/* ════════════════════════════════════════════════════
+          STATS TRIPTYCH — Dark
+          ════════════════════════════════════════════════════ */}
+      <section className="section-dark section-py">
+        <div className="section-container px-6">
+          <ScrollReveal className="text-center mb-14">
+            <p className="text-label mb-4">Validated Performance</p>
+            <h2 className="font-display font-bold" style={{ fontSize: 'clamp(1.875rem, 3.5vw, 3rem)', letterSpacing: '-0.02em', lineHeight: 1.15, color: 'var(--text-on-dark-primary)' }}>
+              Numbers That Matter to Clinicians
+            </h2>
+          </ScrollReveal>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            <ScrollReveal delay={1}>
+              <StatCard
+                value={90}
+                suffix="%"
+                label="Time Reduction"
+                desc="Filters &gt;85% of redundant images. Internal validation dataset."
+              />
+            </ScrollReveal>
+            <ScrollReveal delay={2}>
+              <StatCard
+                value={6}
+                suffix=" min"
+                label="Avg. Review Time"
+                desc="Down from 60 minutes. Physician reviews AI-prioritised frames only."
+              />
+            </ScrollReveal>
+            <ScrollReveal delay={3}>
+              <StatCard
+                value={200}
+                prefix="$"
+                label="Net Savings Per Case"
+                desc="$135 software cost vs $300+ physician time. Immediate ROI from day one."
+              />
+            </ScrollReveal>
+          </div>
         </div>
       </section>
 
-      {/* ─── A5: Remnant Shell brand-area — #3 video overlay ─────── */}
-      {/* #3 — Wistia embed replaces local introhome.mp4 */}
-      <div className="relative w-full h-[480px] overflow-hidden bg-[var(--bg-section-alt)]">
-        {/* Wistia embed layer */}
-        <WistiaBlock className="absolute inset-0 w-full h-full" />
+      {/* ════════════════════════════════════════════════════
+          AUDIENCE SPLIT — Light
+          ════════════════════════════════════════════════════ */}
+      <section className="section-light section-py">
+        <div className="section-container px-6">
+          <ScrollReveal className="text-center mb-14">
+            <p className="text-label mb-4" style={{ color: 'var(--color-cta)' }}>Who It&apos;s For</p>
+            <h2 className="font-display font-bold" style={{ fontSize: 'clamp(1.875rem, 3.5vw, 3rem)', letterSpacing: '-0.02em', lineHeight: 1.15, color: 'var(--text-on-light-primary)' }}>
+              TheraSeus Works for Your Role
+            </h2>
+          </ScrollReveal>
 
-        {/* Remnant Shell image on top */}
-        <div className="absolute inset-0 pointer-events-none">
-          <Image
-            src="/assets/remnant-shell-3.png"
-            alt=""
-            fill
-            quality={75}
-            className="object-cover object-center"
-            style={{ opacity: 0.5, mixBlendMode: 'screen' }}
-            sizes="100vw"
-            aria-hidden="true"
-          />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <ScrollReveal delay={1}>
+              <AudienceCard
+                emoji="🩺"
+                role="Gastroenterologist"
+                quote="Spend 6 minutes diagnosing instead of 60 scanning 50,000+ images."
+                cta="For Clinicians"
+                href="/product"
+              />
+            </ScrollReveal>
+            <ScrollReveal delay={2}>
+              <AudienceCard
+                emoji="📊"
+                role="Practice Administrator"
+                quote="$135 software saves $300+ in physician time per case — immediate ROI from day one."
+                cta="ROI Calculator"
+                href="/product#roi"
+              />
+            </ScrollReveal>
+            <ScrollReveal delay={3} className="md:col-span-2 lg:col-span-1">
+              <AudienceCard
+                emoji="🏥"
+                role="Health Systems"
+                quote="Scale capsule endoscopy procedures 10x with the staff and equipment you already have."
+                cta="For Enterprise"
+                href="/contact"
+              />
+            </ScrollReveal>
+          </div>
         </div>
-        {/* Left + right edge fades */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[var(--bg-section-alt)] via-transparent to-[var(--bg-section-alt)] opacity-70 pointer-events-none" />
-        {/* Top + bottom fades */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-section-alt)] via-transparent to-[var(--bg-section-alt)] opacity-60 pointer-events-none" />
-      </div>
+      </section>
 
-      {/* ─── FINAL CTA ────────────────────────────────────────────── */}
-      <section className="section bg-[var(--bg-section-alt)] relative overflow-hidden">
-        <HeroBackground type="section" opacity={0.2} />
-        <div className="container mx-auto relative z-10 text-center">
-          <SectionWrapper>
-            <GradientText as="h2" className="text-4xl md:text-5xl font-extrabold mb-4">
-              Ready to Transform Your Practice?
-            </GradientText>
-            <p className="text-lg text-[var(--text-secondary)] mb-8 max-w-xl mx-auto">
-              Join gastroenterologists across New Zealand and the US already saving time with TheraSeus.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              {/* Primary CTAs use btn-teal (highest visual weight) */}
-              <Link href="/contact" className="btn-teal">Request a Demo</Link>
-              <Link href="/contact?type=pilot" className="btn-ghost">Join as a Pilot Partner</Link>
+      {/* ════════════════════════════════════════════════════
+          PRODUCT PREVIEW — Dark
+          ════════════════════════════════════════════════════ */}
+      <section className="section-dark-surface section-py">
+        <div className="section-container px-6">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left: product mockup */}
+            <ScrollReveal>
+              <div className="relative rounded-2xl overflow-hidden"
+                style={{ border: '1px solid var(--border-dark-strong)', boxShadow: '0 0 60px rgba(74,92,232,0.12)' }}>
+                <Image
+                  src="/assets/neural-sieve-2.png"
+                  alt="TheraSeus clinical AI interface — capsule endoscopy review platform"
+                  width={620}
+                  height={440}
+                  className="w-full h-auto"
+                  quality={88}
+                />
+              </div>
+            </ScrollReveal>
+
+            {/* Right: copy */}
+            <div>
+              <ScrollReveal>
+                <p className="text-label mb-4">The Platform</p>
+                <h2 className="font-display font-bold mb-6" style={{ fontSize: 'clamp(1.875rem, 3.5vw, 3rem)', letterSpacing: '-0.02em', lineHeight: 1.15, color: 'var(--text-on-dark-primary)' }}>
+                  Clinical-Grade AI. Doctor in Control.
+                </h2>
+              </ScrollReveal>
+              <div className="space-y-5">
+                {[
+                  { icon: '✓', text: 'AI highlights findings — doctor confirms every call' },
+                  { icon: '✓', text: 'Confidence scores always visible on every annotation' },
+                  { icon: '✓', text: 'One-click structured report generation' },
+                  { icon: '✓', text: 'PACS / EMR integration via DICOM + HL7 FHIR' },
+                  { icon: '✓', text: 'Works with all major capsule endoscopy systems' },
+                ].map(({ icon, text }, i) => (
+                  <ScrollReveal key={text} delay={(Math.min(i + 1, 4)) as 1 | 2 | 3 | 4}>
+                    <div className="flex items-start gap-3">
+                      <span className="text-lg mt-0.5 flex-shrink-0" style={{ color: 'var(--color-data-positive)' }}>{icon}</span>
+                      <p style={{ color: 'var(--text-on-dark-secondary)' }}>{text}</p>
+                    </div>
+                  </ScrollReveal>
+                ))}
+              </div>
+              <ScrollReveal className="mt-8">
+                <Link href="/product" className="btn-primary">
+                  Explore TheraSeus →
+                </Link>
+              </ScrollReveal>
             </div>
-          </SectionWrapper>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════
+          TRUST DEEP-DIVE — Light
+          ════════════════════════════════════════════════════ */}
+      <section className="section-light section-py">
+        <div className="section-container px-6">
+          <ScrollReveal className="text-center mb-14">
+            <p className="text-label mb-4" style={{ color: 'var(--color-cta)' }}>Trust Architecture</p>
+            <h2 className="font-display font-bold mb-5" style={{ fontSize: 'clamp(1.875rem, 3.5vw, 3rem)', letterSpacing: '-0.02em', lineHeight: 1.15, color: 'var(--text-on-light-primary)' }}>
+              Built to Clinical Standard
+            </h2>
+            <p className="text-lg max-w-xl mx-auto" style={{ color: 'var(--text-on-light-secondary)' }}>
+              Headquartered at Te Ohaka — Centre for Growth &amp; Innovation, Christchurch, New Zealand.
+            </p>
+          </ScrollReveal>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
+            {[
+              { icon: '☁️',  title: 'Google Cloud Partner', desc: 'HIPAA-eligible infrastructure on GCP' },
+              { icon: '🏆', title: 'NVIDIA Inception Member', desc: 'Accelerated AI development program' },
+              { icon: '🔒', title: 'HIPAA-Ready', desc: 'AWS BAA, PHI de-identified at source' },
+              { icon: '📋', title: 'Medsafe SaMD', desc: 'NZ Classification — In Progress' },
+            ].map(({ icon, title, desc }, i) => (
+              <ScrollReveal key={title} delay={(i + 1) as 1 | 2 | 3 | 4}>
+                <div className="feature-card-light text-center py-8 px-5">
+                  <div className="text-3xl mb-3" aria-hidden="true">{icon}</div>
+                  <h3 className="font-semibold text-sm mb-2" style={{ color: 'var(--text-on-light-primary)' }}>{title}</h3>
+                  <p className="text-xs leading-relaxed" style={{ color: 'var(--text-on-light-secondary)' }}>{desc}</p>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════
+          FINAL CTA — Dark
+          ════════════════════════════════════════════════════ */}
+      <section className="section-dark section-py relative overflow-hidden">
+        {/* Background gradient */}
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true"
+          style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 100%, rgba(232,0,90,0.08) 0%, transparent 70%)' }} />
+
+        <div className="section-container px-6 relative z-10">
+          <ScrollReveal className="text-center mb-12">
+            <h2 className="font-display font-bold mb-4" style={{ fontSize: 'clamp(1.875rem, 3.5vw, 3rem)', letterSpacing: '-0.02em', lineHeight: 1.15, color: 'var(--text-on-dark-primary)' }}>
+              Ready to Transform Your Practice?
+            </h2>
+            <p className="text-lg" style={{ color: 'var(--text-on-dark-secondary)' }}>
+              Two paths to start. Zero commitment required.
+            </p>
+          </ScrollReveal>
+
+          <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+            <ScrollReveal delay={1}>
+              <div className="feature-card-dark flex flex-col gap-4 text-center py-10 px-8">
+                <span className="text-3xl" aria-hidden="true">🏥</span>
+                <h3 className="font-display font-bold text-xl" style={{ color: 'var(--text-on-dark-primary)' }}>
+                  For Clinics &amp; Hospitals
+                </h3>
+                <p style={{ color: 'var(--text-on-dark-secondary)' }}>
+                  Start with 50 cases FREE — no commitment, no credit card.
+                </p>
+                <Link href="/contact?type=pilot" className="btn-primary">
+                  Join Pilot Program →
+                </Link>
+              </div>
+            </ScrollReveal>
+            <ScrollReveal delay={2}>
+              <div className="feature-card-dark flex flex-col gap-4 text-center py-10 px-8">
+                <span className="text-3xl" aria-hidden="true">💼</span>
+                <h3 className="font-display font-bold text-xl" style={{ color: 'var(--text-on-dark-primary)' }}>
+                  For Investors &amp; Partners
+                </h3>
+                <p style={{ color: 'var(--text-on-dark-secondary)' }}>
+                  Learn about our technology, market position, and roadmap.
+                </p>
+                <Link href="/contact?type=investor" className="btn-secondary">
+                  Schedule a Catchup →
+                </Link>
+              </div>
+            </ScrollReveal>
+          </div>
         </div>
       </section>
     </>

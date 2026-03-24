@@ -5,10 +5,8 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
 const links = [
-  { href: '/', label: 'Home' },
   { href: '/product', label: 'Product' },
-  { href: '/team', label: 'Team' },
-  { href: '/media', label: 'Media' },
+  { href: '/about',   label: 'About' },
   { href: '/contact', label: 'Contact' },
 ];
 
@@ -18,81 +16,90 @@ export default function Nav() {
   const pathname = usePathname();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => { setOpen(false); }, [pathname]);
+
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 nav-blur ${
-        scrolled ? 'shadow-lg' : ''
-      }`}
-    >
-      <div className="container mx-auto flex items-center justify-between px-6 h-16">
+    <header className={`nav-blur fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'scrolled' : ''}`}>
+      <div className="section-container flex items-center justify-between h-16 px-6">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-          <Image src="/assets/logo.png" alt="Nexture" width={0} height={0} className="h-9 w-auto object-contain" />
+        <Link href="/" className="flex items-center gap-2 flex-shrink-0" aria-label="Nexture home">
+          <Image
+            src="/assets/logo.png"
+            alt="Nexture"
+            width={120}
+            height={36}
+            className="h-8 w-auto object-contain"
+            priority
+          />
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-7">
+        <nav className="hidden md:flex items-center gap-8" aria-label="Main navigation">
           {links.map(({ href, label }) => (
             <Link
               key={href}
               href={href}
-              className={`nav-link text-sm font-medium ${
-                pathname === href ? 'active' : ''
-              }`}
+              className={`nav-link ${pathname === href || pathname?.startsWith(href + '/') ? 'active' : ''}`}
             >
               {label}
             </Link>
           ))}
         </nav>
 
-        {/* CTA */}
+        {/* Desktop CTA */}
         <div className="hidden md:block">
-          <Link href="/contact" className="btn-teal text-sm">
-            Request Demo
+          <Link href="/contact" className="btn-primary text-sm py-2.5 px-5">
+            Book Demo
           </Link>
         </div>
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden p-2 text-[var(--text-secondary)]"
+          className="md:hidden p-2 text-[var(--text-on-dark-secondary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)] rounded"
           onClick={() => setOpen(!open)}
-          aria-label="Toggle menu"
+          aria-label={open ? 'Close menu' : 'Open menu'}
+          aria-expanded={open}
         >
-          <div className="space-y-1.5">
-            <span className={`block h-0.5 w-6 bg-current transition-all ${open ? 'rotate-45 translate-y-2' : ''}`} />
-            <span className={`block h-0.5 w-6 bg-current transition-all ${open ? 'opacity-0' : ''}`} />
-            <span className={`block h-0.5 w-6 bg-current transition-all ${open ? '-rotate-45 -translate-y-2' : ''}`} />
+          <div className="w-6 flex flex-col gap-1.5">
+            <span className={`block h-0.5 bg-current transition-all duration-300 ${open ? 'rotate-45 translate-y-2' : ''}`} />
+            <span className={`block h-0.5 bg-current transition-all duration-300 ${open ? 'opacity-0' : ''}`} />
+            <span className={`block h-0.5 bg-current transition-all duration-300 ${open ? '-rotate-45 -translate-y-2' : ''}`} />
           </div>
         </button>
       </div>
 
       {/* Mobile menu */}
-      {open && (
-        <div className="md:hidden bg-[var(--bg-elevated)] border-t border-[var(--border-subtle)] px-6 py-4 space-y-3">
+      <div
+        className={`md:hidden overflow-hidden transition-all duration-300 ${open ? 'max-h-80' : 'max-h-0'}`}
+        style={{ background: 'rgba(6, 10, 20, 0.97)', backdropFilter: 'blur(12px)', borderBottom: '1px solid var(--border-dark)' }}
+      >
+        <nav className="px-6 py-4 space-y-1" aria-label="Mobile navigation">
           {links.map(({ href, label }) => (
             <Link
               key={href}
               href={href}
-              className={`block text-sm font-medium py-1.5 px-3 rounded-lg transition-colors ${
+              className={`block py-3 px-3 rounded-lg text-sm font-medium transition-colors ${
                 pathname === href
-                  ? 'bg-[rgba(154,129,223,0.22)] text-[var(--text-primary)]'
-                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                  ? 'text-[var(--text-on-dark-primary)] bg-[rgba(232,0,90,0.08)]'
+                  : 'text-[var(--text-on-dark-secondary)] hover:text-[var(--text-on-dark-primary)]'
               }`}
-              onClick={() => setOpen(false)}
             >
               {label}
             </Link>
           ))}
-          <Link href="/contact" className="btn-teal text-sm py-2 px-5 w-full justify-center mt-2" onClick={() => setOpen(false)}>
-            Request Demo
-          </Link>
-        </div>
-      )}
+          <div className="pt-2">
+            <Link href="/contact" className="btn-primary text-sm py-2.5 w-full justify-center">
+              Book Demo
+            </Link>
+          </div>
+        </nav>
+      </div>
     </header>
   );
 }
