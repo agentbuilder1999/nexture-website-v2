@@ -22,12 +22,6 @@ const features = [
   { icon: '🔒', title: 'HIPAA Compliant', desc: 'Cloud or on-premise deployment. PHI de-identified locally before AI processing.' },
 ];
 
-const steps = [
-  { num: '01', title: 'Upload Study', desc: 'Upload your capsule endoscopy study directly or connect your workstation.' },
-  { num: '02', title: 'AI Filters 55,000 Frames', desc: 'TheraSeus AI analyses every frame and surfaces the 1,250 most clinically relevant.' },
-  { num: '03', title: 'Review & Report in 6 Min', desc: 'Doctor reviews AI-prioritised findings, confirms, and generates a signed report.' },
-];
-
 // ── CountUp hook using IntersectionObserver ──────────────────
 function useCountUp(target: number, duration = 2000, triggered = false) {
   const [count, setCount] = useState(0);
@@ -66,34 +60,124 @@ function StatCard({ value, suffix, prefix, label }: { value: number; suffix?: st
   const formatted = count >= 1000 ? count.toLocaleString() : count.toString();
 
   return (
-    <div ref={ref}>
-      <p className="text-4xl font-extrabold gradient-text mb-1">
+    <div ref={ref} className="text-center">
+      <p className="text-4xl md:text-5xl font-extrabold gradient-text mb-2">
         {prefix}{formatted}{suffix}
       </p>
-      <p className="text-sm text-[var(--text-secondary)]">{label}</p>
+      <p className="text-sm md:text-base text-white/80 font-medium">{label}</p>
     </div>
   );
 }
 
-// ── Wistia embed block (replaces local introhome.mp4) ────────
-// media-id: 3bhr3pi6rc | aspect: 16:9
-function WistiaBlock({ className }: { className?: string }) {
+// ── Stats + Video Section (item #5) ─────────────────────────
+// Video plays full-width/height. Stats overlaid centered on top.
+// Click to toggle mute; default muted.
+function StatsVideoSection() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [muted, setMuted] = useState(true);
+
+  const handleVideoClick = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (muted) {
+      video.muted = false;
+      video.volume = 0.6;
+      setMuted(false);
+    } else {
+      video.muted = true;
+      setMuted(true);
+    }
+  };
+
   return (
-    <div className={`relative ${className ?? ''}`}>
-      {/* eslint-disable-next-line @next/next/no-before-interactive-script-in-document */}
-      <script src="https://fast.wistia.com/player.js" async />
-      <script src="https://fast.wistia.com/embed/3bhr3pi6rc.js" async type="module" />
-      {/* @ts-expect-error — wistia-player is a custom element */}
-      <wistia-player
-        media-id="3bhr3pi6rc"
-        aspect="1.7777777777777777"
-        style={{ width: '100%', height: '100%' }}
+    <section
+      className="relative w-full overflow-hidden cursor-pointer"
+      style={{ minHeight: '480px', aspectRatio: '16/7' }}
+      onClick={handleVideoClick}
+      aria-label="Stats section — click to toggle audio"
+    >
+      {/* Full-width background video */}
+      <video
+        ref={videoRef}
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 w-full h-full object-contain"
+        style={{ background: 'var(--bg-section-alt)' }}
+      >
+        <source src="/assets/intro.mp4" type="video/mp4" />
+      </video>
+
+      {/* Semi-transparent overlay for legibility */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: 'linear-gradient(135deg, rgba(12,5,36,0.55) 0%, rgba(10,5,32,0.45) 100%)' }}
       />
-    </div>
+
+      {/* Stats overlay — centered, pointer-events none so click passes through to video */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-16 px-8 text-center w-full max-w-4xl mx-auto">
+          {stats.map(({ value, suffix, prefix, label }) => (
+            <StatCard key={label} value={value} suffix={suffix} prefix={prefix} label={label} />
+          ))}
+        </div>
+      </div>
+
+      {/* Mute indicator */}
+      <div className="absolute bottom-4 right-4 pointer-events-none">
+        <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-sm rounded-full px-3 py-1.5 text-xs text-white/70">
+          {muted ? (
+            <>
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+              </svg>
+              Tap for sound
+            </>
+          ) : (
+            <>
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+              </svg>
+              Tap to mute
+            </>
+          )}
+        </div>
+      </div>
+    </section>
   );
+}
+
+// ── Parallax hook for product image (item #6) ────────────────
+function useParallax(strength = 30) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const rect = el.getBoundingClientRect();
+        const viewH = window.innerHeight;
+        // progress: -1 (above viewport) → 0 (centred) → 1 (below)
+        const progress = ((rect.top + rect.height / 2) - viewH / 2) / viewH;
+        const clampedProgress = Math.max(-1, Math.min(1, progress));
+        el.style.transform = `translateY(${clampedProgress * strength}px)`;
+        ticking = false;
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [strength]);
+  return ref;
 }
 
 export default function HomePage() {
+  const parallaxRef = useParallax(24);
+
   useEffect(() => {
     const els = document.querySelectorAll('.word-reveal');
     const obs = new IntersectionObserver(
@@ -140,6 +224,7 @@ export default function HomePage() {
         <HeroBackground type="hero" opacity={0.55} />
 
         {/* Layer 3 — Particle field (120 particles, purple-pink-amber palette) */}
+        {/* Particles must remain unaffected — z-index and container unchanged */}
         <HeroParticles />
 
         {/* Layer 3 — text content */}
@@ -150,8 +235,8 @@ export default function HomePage() {
               Now Available — NZ &amp; US Healthcare
             </div>
 
-            {/* #9 — Hero H1 gradient: both lines use gradient-text */}
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-10 hero-title">
+            {/* item #4 — Hero H1: increased line-height to prevent overlap */}
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-10 hero-title" style={{ lineHeight: 1.2, letterSpacing: '-0.01em' }}>
               <span className="gradient-text word-reveal" style={{transitionDelay:'0ms'}}>Pushing</span>{' '}
               <span className="gradient-text word-reveal" style={{transitionDelay:'80ms'}}>the</span>{' '}
               <span className="gradient-text word-reveal" style={{transitionDelay:'160ms'}}>Boundaries</span>
@@ -159,8 +244,8 @@ export default function HomePage() {
               <span className="gradient-text word-reveal" style={{transitionDelay:'240ms'}}>of AI</span>
             </h1>
 
+            {/* item #4 — removed "Request a Demo" btn; keep only "Learn More" → /product */}
             <div className="flex flex-wrap gap-4">
-              <Link href="/contact" className="btn-teal">Request a Demo</Link>
               <Link href="/product" className="btn-ghost">Learn More →</Link>
             </div>
           </div>
@@ -170,26 +255,12 @@ export default function HomePage() {
         <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[var(--bg-page)] to-transparent z-10 pointer-events-none" />
       </section>
 
-      {/* ─── STATS BAR ────────────────────────────────────────────── */}
-      {/* #7 — CountUp animation on scroll */}
-      <section className="bg-[var(--bg-card)] border-y border-[var(--border-subtle)] px-[var(--px-page)] py-8">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
-            {stats.map(({ value, suffix, prefix, label }) => (
-              <StatCard key={label} value={value} suffix={suffix} prefix={prefix} label={label} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ─── INTRO VIDEO (below Hero) ─────────────────────────────── */}
-      {/* #15 — Wistia embed replaces local introhome.mp4 (was 53MB, exceeded Vercel limit) */}
-      <section className="w-full overflow-hidden bg-[var(--bg-section-alt)]" style={{ maxHeight: '60vh' }}>
-        <WistiaBlock className="w-full" />
-      </section>
+      {/* ─── STATS + VIDEO (item #5 — major rework) ──────────────── */}
+      <StatsVideoSection />
 
       {/* ─── PRODUCT INTRO (TheraSeus + Funnel_Collapse) ──────────── */}
-      <section className="section bg-texture relative">
+      {/* item #6 — parallax reveal animation, image fills container, caption inside image */}
+      <section className="section bg-texture relative overflow-hidden">
         <div className="container mx-auto relative z-10">
           <SectionWrapper className="text-center mb-12">
             <p className="text-sm font-semibold text-[var(--primary)] uppercase tracking-widest mb-3">Our Product</p>
@@ -201,11 +272,11 @@ export default function HomePage() {
           </SectionWrapper>
 
           <div className="grid md:grid-cols-2 gap-10 items-center">
-            {/* Feature cards */}
+            {/* Feature cards — slide-in from left */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {features.map(({ icon, title, desc }, i) => (
-                <SectionWrapper key={title} delay={i * 0.1}>
-                  <div className="card h-full">
+                <SectionWrapper key={title} delay={i * 0.12}>
+                  <div className="card h-full" style={{ transform: 'none' }}>
                     <span className="text-3xl mb-3 block">{icon}</span>
                     <h3 className="text-base font-bold text-[var(--text-heading)] mb-2">{title}</h3>
                     <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{desc}</p>
@@ -214,36 +285,40 @@ export default function HomePage() {
               ))}
             </div>
 
-            {/* Funnel_Collapse illustration — mix-blend-mode: screen */}
+            {/* item #6 — image fills container; caption inside image as overlay */}
+            {/* Parallax effect via scroll listener — subtle professional reveal */}
             <SectionWrapper delay={0.2}>
-              <div className="relative rounded-2xl overflow-hidden bg-[var(--bg-section-alt)]"
-                   style={{ minHeight: 320 }}>
-                {/* intro video behind */}
+              <div
+                className="relative rounded-2xl overflow-hidden"
+                style={{ minHeight: 380 }}
+              >
+                {/* intro video behind — fills container, no gaps */}
                 <video
                   autoPlay muted loop playsInline
-                  className="absolute inset-0 w-full h-full object-cover opacity-30"
+                  className="absolute inset-0 w-full h-full object-cover"
                   aria-hidden="true"
                 >
                   <source src="/assets/intro.mp4" type="video/mp4" />
                 </video>
 
-                {/* Funnel_Collapse AI image with screen blend */}
-                <div className="relative w-full" style={{ aspectRatio: '4/3' }}>
+                {/* Funnel_Collapse AI image — parallax, fills container with object-cover */}
+                <div ref={parallaxRef} className="relative w-full h-full product-parallax-image" style={{ minHeight: 380 }}>
                   <Image
                     src="/assets/funnel-collapse.png"
                     alt="TheraSeus AI filters 55,000 capsule endoscopy frames to the 1,250 most clinically relevant"
                     fill
                     quality={85}
-                    className="object-contain object-center"
+                    className="object-cover object-center"
                     style={{ mixBlendMode: 'screen', opacity: 0.9, filter: 'brightness(1.2) contrast(1.1)' }}
-                    sizes="100vw"
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     priority
                   />
                 </div>
 
-                {/* Caption overlay */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[var(--bg-section-alt)] to-transparent">
-                  <p className="text-xs text-[var(--text-muted)] italic text-center">
+                {/* item #6 — caption INSIDE image as bottom overlay */}
+                <div className="absolute bottom-0 left-0 right-0 px-4 py-3"
+                     style={{ background: 'linear-gradient(to top, rgba(10,5,32,0.80) 0%, rgba(10,5,32,0.40) 60%, transparent 100%)' }}>
+                  <p className="text-xs text-white/75 italic text-center">
                     TheraSeus — AI-assisted capsule endoscopy. Not for primary diagnosis.
                   </p>
                 </div>
@@ -252,77 +327,26 @@ export default function HomePage() {
           </div>
 
           <SectionWrapper className="text-center mt-10">
-            {/* #8 — Secondary CTA uses btn-secondary */}
             <Link href="/product" className="btn-secondary">Explore TheraSeus →</Link>
           </SectionWrapper>
         </div>
       </section>
 
-      {/* ─── HOW IT WORKS ─────────────────────────────────────────── */}
-      <section className="section bg-[var(--bg-section-alt)]">
-        <div className="container mx-auto">
-          <SectionWrapper className="text-center mb-12">
-            <GradientText as="h2" className="text-4xl md:text-5xl font-extrabold mb-4">How It Works</GradientText>
-            <p className="text-[var(--text-secondary)] max-w-xl mx-auto">
-              Three steps from study upload to signed report.
-            </p>
-          </SectionWrapper>
+      {/* ─── HOW IT WORKS — DELETED (item #7) ────────────────────── */}
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {steps.map(({ num, title, desc }, i) => (
-              <SectionWrapper key={num} delay={i * 0.15}>
-                <div className="card relative overflow-hidden">
-                  <div className="text-6xl font-extrabold text-[var(--border-subtle)] absolute top-4 right-4 select-none font-mono">
-                    {num}
-                  </div>
-                  <div className="relative z-10">
-                    <p className="text-xs font-semibold text-[var(--primary)] uppercase tracking-widest mb-2">Step {num}</p>
-                    <h3 className="text-lg font-bold text-[var(--text-heading)] mb-3">{title}</h3>
-                    <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{desc}</p>
-                  </div>
-                </div>
-              </SectionWrapper>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ─── PARTNER LOGOS ────────────────────────────────────────── */}
+      {/* ─── PARTNER LOGOS (item #8 — heading renamed to "Acknowledgment") */}
       <section className="section-sm bg-[var(--bg-page)]">
         <div className="container mx-auto">
           <SectionWrapper className="text-center">
             <p className="text-sm font-semibold text-[var(--text-tertiary)] uppercase tracking-widest mb-8">
-              Trusted &amp; Supported By
+              Acknowledgment
             </p>
             <PartnerLogos />
           </SectionWrapper>
         </div>
       </section>
 
-      {/* ─── A5: Remnant Shell brand-area — #3 video overlay ─────── */}
-      {/* #3 — Wistia embed replaces local introhome.mp4 */}
-      <div className="relative w-full h-[480px] overflow-hidden bg-[var(--bg-section-alt)]">
-        {/* Wistia embed layer */}
-        <WistiaBlock className="absolute inset-0 w-full h-full" />
-
-        {/* Remnant Shell image on top */}
-        <div className="absolute inset-0 pointer-events-none">
-          <Image
-            src="/assets/remnant-shell-3.png"
-            alt=""
-            fill
-            quality={75}
-            className="object-cover object-center"
-            style={{ opacity: 0.5, mixBlendMode: 'screen' }}
-            sizes="100vw"
-            aria-hidden="true"
-          />
-        </div>
-        {/* Left + right edge fades */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[var(--bg-section-alt)] via-transparent to-[var(--bg-section-alt)] opacity-70 pointer-events-none" />
-        {/* Top + bottom fades */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-section-alt)] via-transparent to-[var(--bg-section-alt)] opacity-60 pointer-events-none" />
-      </div>
+      {/* ─── A5: Remnant Shell brand-area — DELETED (item #9) ─────── */}
 
       {/* ─── FINAL CTA ────────────────────────────────────────────── */}
       <section className="section bg-[var(--bg-section-alt)] relative overflow-hidden">
@@ -336,7 +360,6 @@ export default function HomePage() {
               Join gastroenterologists across New Zealand and the US already saving time with TheraSeus.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              {/* Primary CTAs use btn-teal (highest visual weight) */}
               <Link href="/contact" className="btn-teal">Request a Demo</Link>
               <Link href="/contact?type=pilot" className="btn-ghost">Join as a Pilot Partner</Link>
             </div>

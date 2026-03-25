@@ -36,7 +36,12 @@ export default function Footer() {
             <div>
               <p className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-widest mb-3">Contact</p>
               <ul className="space-y-2">
-                <li><a href="mailto:hello@nexture.nz" className="text-sm text-[var(--text-secondary)] hover:text-[var(--primary)] transition-colors">hello@nexture.nz</a></li>
+                {/* item #10 — email replaced with Contact Us link */}
+                <li>
+                  <Link href="/contact" className="text-sm text-[var(--text-secondary)] hover:text-[var(--primary)] transition-colors">
+                    Contact Us
+                  </Link>
+                </li>
                 <li><p className="text-sm text-[var(--text-tertiary)]">Christchurch, New Zealand</p></li>
               </ul>
             </div>

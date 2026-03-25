@@ -30,9 +30,9 @@ export default function Nav() {
       }`}
     >
       <div className="container mx-auto flex items-center justify-between px-6 h-16">
-        {/* Logo */}
+        {/* Logo — enlarged (item #1) */}
         <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-          <Image src="/assets/logo.png" alt="Nexture" width={0} height={0} className="h-9 w-auto object-contain" />
+          <Image src="/assets/logo.png" alt="Nexture" width={0} height={0} className="h-14 w-auto object-contain" />
         </Link>
 
         {/* Desktop nav */}
@@ -50,12 +50,7 @@ export default function Nav() {
           ))}
         </nav>
 
-        {/* CTA */}
-        <div className="hidden md:block">
-          <Link href="/contact" className="btn-teal text-sm">
-            Request Demo
-          </Link>
-        </div>
+        {/* CTA removed (item #3) */}
 
         {/* Mobile hamburger */}
         <button
@@ -71,7 +66,7 @@ export default function Nav() {
         </button>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu — no Request Demo button (item #3) */}
       {open && (
         <div className="md:hidden bg-[var(--bg-elevated)] border-t border-[var(--border-subtle)] px-6 py-4 space-y-3">
           {links.map(({ href, label }) => (
@@ -88,9 +83,6 @@ export default function Nav() {
               {label}
             </Link>
           ))}
-          <Link href="/contact" className="btn-teal text-sm py-2 px-5 w-full justify-center mt-2" onClick={() => setOpen(false)}>
-            Request Demo
-          </Link>
         </div>
       )}
     </header>
