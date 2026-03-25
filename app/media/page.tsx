@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import Image from 'next/image';
 import SectionWrapper from '@/components/SectionWrapper';
 import GradientText from '@/components/GradientText';
-import HeroBackground from '@/components/HeroBackground';
 import PartnerLogos from '@/components/PartnerLogos';
 
 export const metadata: Metadata = {
@@ -28,8 +27,20 @@ export default function MediaPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative min-h-[45vh] flex items-center overflow-hidden pt-16 bg-[var(--bg-section-alt)]">
-        <HeroBackground type="section" opacity={0.25} />
+      <section className="relative min-h-[45vh] flex items-center overflow-hidden pt-16">
+        {/* Background image */}
+        <Image
+          src="/images/headers/m.jpg"
+          alt=""
+          fill
+          priority
+          quality={85}
+          className="object-cover object-center"
+          sizes="100vw"
+          aria-hidden="true"
+        />
+        {/* Dark overlay */}
+        <div className="absolute inset-0 z-[1]" style={{ background: 'rgba(0, 0, 0, 0.52)' }} />
         <div className="container mx-auto px-[var(--px-page)] py-20 relative z-10">
           <SectionWrapper>
             <p className="text-xs font-semibold text-[var(--primary)] uppercase tracking-widest mb-3">Press &amp; Media</p>

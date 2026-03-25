@@ -1,9 +1,9 @@
 'use client';
 import { useState, FormEvent } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import SectionWrapper from '@/components/SectionWrapper';
 import GradientText from '@/components/GradientText';
-import HeroBackground from '@/components/HeroBackground';
 
 // TODO: replace with real Formspree form ID — register at https://formspree.io
 const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
@@ -67,8 +67,20 @@ export default function ProductPage() {
       )}
 
       {/* Hero */}
-      <section className="relative min-h-[50vh] flex items-center overflow-hidden pt-16 bg-[var(--bg-section-alt)]">
-        <HeroBackground type="section" opacity={0.3} />
+      <section className="relative min-h-[50vh] flex items-center overflow-hidden pt-16">
+        {/* Background image */}
+        <Image
+          src="/images/headers/p.jpg"
+          alt=""
+          fill
+          priority
+          quality={85}
+          className="object-cover object-center"
+          sizes="100vw"
+          aria-hidden="true"
+        />
+        {/* Dark overlay */}
+        <div className="absolute inset-0 z-[1]" style={{ background: 'rgba(0, 0, 0, 0.52)' }} />
         <div className="container mx-auto px-[var(--px-page)] py-20 relative z-10">
           <SectionWrapper>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--border-default)] bg-[var(--bg-card)] text-xs font-semibold text-[var(--accent-rose)] mb-6">
