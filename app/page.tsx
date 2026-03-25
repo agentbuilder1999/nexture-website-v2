@@ -118,7 +118,7 @@ function StatsVideoSection() {
           observer.unobserve(entry.target);
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.05, rootMargin: '0px 0px -40px 0px' }
     );
     observer.observe(el);
 
@@ -157,10 +157,10 @@ function StatsVideoSection() {
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
       />
 
-      {/* 80% opacity grey overlay — replaces gradient for stronger stat contrast */}
+      {/* Deeper grey overlay — stronger contrast for stats readability */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: 'rgba(128, 128, 128, 0.8)' }}
+        style={{ background: 'rgba(100, 100, 100, 0.88)' }}
       />
 
       {/* Stats overlay — centered */}

@@ -30,7 +30,7 @@ function ShaderScene({ type, mod }: { type: 'hero' | 'section'; mod: ShaderMod }
       style={{ position: 'absolute', inset: 0 } as React.CSSProperties}
       pixelDensity={1}
       fov={45}
-      gl={{ powerPreference: 'low-power' }}
+      gl={{ powerPreference: 'low-power', alpha: true }}
     >
       <ShaderGradient
         type={isHero ? 'waterPlane' : 'plane'}
