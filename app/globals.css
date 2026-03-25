@@ -296,3 +296,12 @@ body {
   opacity: 1;
   transform: none;
 }
+
+/* ── Video Section — prefers-reduced-motion override ─────── */
+@media (prefers-reduced-motion: reduce) {
+  .video-section-entrance {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
