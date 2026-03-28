@@ -1,8 +1,8 @@
 'use client';
 import { useState, FormEvent } from 'react';
+import Image from 'next/image';
 import SectionWrapper from '@/components/SectionWrapper';
 import GradientText from '@/components/GradientText';
-import HeroBackground from '@/components/HeroBackground';
 
 const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mgonqqdn';
 
@@ -61,8 +61,20 @@ export default function ContactPage() {
       )}
 
       {/* Hero */}
-      <section className="relative min-h-[40vh] flex items-center overflow-hidden pt-16 bg-[var(--bg-section-alt)]">
-        <HeroBackground type="section" opacity={0.25} />
+      <section className="relative min-h-[40vh] flex items-center overflow-hidden pt-16">
+        {/* Background image */}
+        <Image
+          src="/images/headers/c.jpg"
+          alt=""
+          fill
+          priority
+          quality={85}
+          className="object-cover object-center"
+          sizes="100vw"
+          aria-hidden="true"
+        />
+        {/* Dark overlay */}
+        <div className="absolute inset-0 z-[1]" style={{ background: 'rgba(0, 0, 0, 0.52)' }} />
         <div className="container mx-auto px-[var(--px-page)] py-16 relative z-10">
           <SectionWrapper>
             <GradientText as="h1" className="text-5xl md:text-6xl font-extrabold mb-4">Get in Touch</GradientText>

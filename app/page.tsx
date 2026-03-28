@@ -41,20 +41,25 @@ function useCountUp(target: number, duration = 2000, triggered = false) {
   return count;
 }
 
-function StatCard({ value, suffix, prefix, label }: { value: number; suffix?: string; prefix?: string; label: string }) {
-  const [triggered, setTriggered] = useState(false);
+function StatCard({ value, suffix, prefix, label, externalTrigger }: { value: number; suffix?: string; prefix?: string; label: string; externalTrigger?: boolean }) {
+  // When externalTrigger is provided (from section IO), use it directly.
+  // Otherwise fall back to own IntersectionObserver for standalone usage.
+  const [selfTriggered, setSelfTriggered] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const triggered = externalTrigger !== undefined ? externalTrigger : selfTriggered;
   const count = useCountUp(value, 2000, triggered);
 
   useEffect(() => {
+    // Only self-observe when no external trigger is provided
+    if (externalTrigger !== undefined) return;
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) { setTriggered(true); obs.disconnect(); }
+      if (entry.isIntersecting) { setSelfTriggered(true); obs.disconnect(); }
     }, { threshold: 0.3 });
     obs.observe(el);
     return () => obs.disconnect();
-  }, []);
+  }, [externalTrigger]);
 
   // Format large numbers with commas
   const formatted = count >= 1000 ? count.toLocaleString() : count.toString();
@@ -71,9 +76,11 @@ function StatCard({ value, suffix, prefix, label }: { value: number; suffix?: st
 
 // ── Stats + Video Section (item #5) ─────────────────────────
 // Video plays full-width/height. Stats overlaid centered on top.
-// Click to toggle mute; default muted.
+// Scroll-triggered entrance animation: fade-up + scale-in (Aria Option A).
 function StatsVideoSection() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [statsTriggered, setStatsTriggered] = useState(false);
 
   useEffect(() => {
     // Load Wistia embed script
@@ -86,17 +93,62 @@ function StatsVideoSection() {
     document.head.appendChild(script1);
     document.head.appendChild(script2);
 
+    // Respect prefers-reduced-motion
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      setIsVisible(true);
+      setStatsTriggered(true);
+      return () => {
+        document.head.removeChild(script1);
+        document.head.removeChild(script2);
+      };
+    }
+
+    // Intersection Observer for scroll-triggered entrance
+    const el = containerRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          // Stats count-up: delay 400ms after container animation starts
+          setTimeout(() => setStatsTriggered(true), 400);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.05, rootMargin: '0px 0px -40px 0px' }
+    );
+    observer.observe(el);
+
     return () => {
+      observer.disconnect();
       document.head.removeChild(script1);
       document.head.removeChild(script2);
     };
   }, []);
 
+  // Remove will-change after animation completes
+  const handleTransitionEnd = () => {
+    if (containerRef.current) {
+      containerRef.current.style.willChange = 'auto';
+    }
+  };
+
   return (
     <section
       ref={containerRef}
-      className="relative w-full overflow-hidden"
-      style={{ minHeight: '480px', aspectRatio: '16/7' }}
+      className="relative w-full overflow-hidden video-section-entrance"
+      style={{
+        minHeight: '480px',
+        aspectRatio: '16/7',
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(24px) scale(0.97)',
+        transition: 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+        willChange: 'transform, opacity',
+      }}
+      onTransitionEnd={handleTransitionEnd}
       aria-label="Stats section with video background"
     >
       {/* Wistia video background */}
@@ -105,17 +157,17 @@ function StatsVideoSection() {
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
       />
 
-      {/* Semi-transparent overlay for legibility */}
+      {/* Deeper grey overlay — stronger contrast for stats readability */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: 'linear-gradient(135deg, rgba(12,5,36,0.55) 0%, rgba(10,5,32,0.45) 100%)' }}
+        style={{ background: 'rgba(100, 100, 100, 0.88)' }}
       />
 
       {/* Stats overlay — centered */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-16 px-8 text-center w-full max-w-4xl mx-auto">
           {stats.map(({ value, suffix, prefix, label }) => (
-            <StatCard key={label} value={value} suffix={suffix} prefix={prefix} label={label} />
+            <StatCard key={label} value={value} suffix={suffix} prefix={prefix} label={label} externalTrigger={statsTriggered} />
           ))}
         </div>
       </div>
