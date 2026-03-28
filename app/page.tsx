@@ -131,7 +131,9 @@ function StatsVideoSection() {
   }, []);
 
   // Fix 5: mute toggle — click toggles mute only, never pauses/restarts video
-  const handleVideoSectionClick = () => {
+  const handleVideoSectionClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     setIsMuted(prev => {
       const next = !prev;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -140,6 +142,8 @@ function StatsVideoSection() {
         const video = W.api('3bhr3pi6rc');
         if (video) {
           if (next) video.mute(); else video.unmute();
+          // Ensure video keeps playing after mute toggle
+          setTimeout(() => { try { video.play(); } catch(_) {} }, 50);
         }
       }
       return next;
@@ -173,7 +177,7 @@ function StatsVideoSection() {
       {/* Wistia video background */}
       <div
         className="wistia_embed wistia_async_3bhr3pi6rc videoFoam=true autoPlay=true silentAutoPlay=true controlsVisibleOnLoad=false playbar=false smallPlayButton=false volumeControl=false fullscreenButton=false playbackRateControl=false endVideoBehavior=loop"
-        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
+        style={{ pointerEvents: 'none', position: 'absolute', inset: 0, width: '100%', height: '100%' }}
       />
 
       {/* Deeper grey overlay — stronger contrast for stats readability */}
@@ -377,7 +381,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Fix 6B — "Explore TheraSeus →" button inside image, bottom-right */}
-                <div className="absolute bottom-3 right-3 z-10">
+                <div className="absolute bottom-10 right-3 z-10">
                   <Link
                     href="/product"
                     className="text-sm px-3 py-1.5 bg-black/50 text-white rounded hover:bg-black/70 transition-colors"
