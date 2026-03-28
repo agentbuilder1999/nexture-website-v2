@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import Link from 'next/link';
 import SectionWrapper from '@/components/SectionWrapper';
 import GradientText from '@/components/GradientText';
 
@@ -52,37 +51,6 @@ export default function TeamPage() {
             <p className="text-xl text-[var(--text-secondary)] leading-relaxed">
               Headquartered in Christchurch, New Zealand. Building AI for the future of healthcare.
             </p>
-          </SectionWrapper>
-        </div>
-      </section>
-
-      {/* ─── FOUNDER ─────────────────────────────────────────────── */}
-      <section className="section">
-        <div className="container mx-auto">
-          <SectionWrapper>
-            <div className="flex flex-col md:flex-row gap-8 items-center max-w-3xl mx-auto">
-              {/* Founder info — photo placeholder removed; using company identity */}
-              <div>
-                <p className="text-xs font-semibold text-[var(--primary)] uppercase tracking-widest mb-1">Leadership</p>
-                <h2 className="text-2xl font-bold text-[var(--text-heading)] mb-3">Nexture Limited</h2>
-                <p className="text-sm text-[var(--text-secondary)] leading-relaxed mb-4">
-                  Nexture is led by a team with deep expertise in healthcare AI and product development,
-                  building the technology stack that enables clinicians to focus on what matters most — patient care.
-                  Headquartered in Christchurch, New Zealand.
-                </p>
-                <div className="flex gap-3">
-                  <Link href="/contact" className="btn-teal text-sm py-2 px-4">Get in Touch</Link>
-                  <a
-                    href="https://www.linkedin.com/company/nexture-limited"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-ghost text-sm py-2 px-4"
-                  >
-                    LinkedIn ↗
-                  </a>
-                </div>
-              </div>
-            </div>
           </SectionWrapper>
         </div>
       </section>
@@ -141,20 +109,6 @@ export default function TeamPage() {
         </div>
       </section>
 
-      {/* ─── HIRING CTA ───────────────────────────────────────────── */}
-      <section className="section bg-[var(--bg-section-alt)]">
-        <div className="container mx-auto text-center">
-          <SectionWrapper>
-            <GradientText as="h2" className="text-3xl font-extrabold mb-3">We&apos;re Hiring</GradientText>
-            <p className="text-[var(--text-secondary)] mb-6 max-w-lg mx-auto">
-              Join a small, focused team building the future of healthcare AI in New Zealand.
-            </p>
-            <a href="mailto:hello@nexture.nz?subject=Careers at Nexture" className="btn-secondary">
-              View Open Roles →
-            </a>
-          </SectionWrapper>
-        </div>
-      </section>
     </>
   );
 }

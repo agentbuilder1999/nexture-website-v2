@@ -27,7 +27,7 @@ function ShaderScene({ type, mod }: { type: 'hero' | 'section'; mod: ShaderMod }
 
   return (
     <ShaderGradientCanvas
-      style={{ position: 'absolute', inset: 0 } as React.CSSProperties}
+      style={{ position: 'absolute', inset: 0, background: 'transparent' } as React.CSSProperties}
       pixelDensity={1}
       fov={45}
       gl={{ powerPreference: 'low-power', alpha: true }}
@@ -90,12 +90,15 @@ export default function HeroBackground({ type = 'hero', opacity = 0.55 }: HeroBa
             transformOrigin: 'center center',
             WebkitMaskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 35%, rgba(0,0,0,0.5) 60%, transparent 80%)',
             maskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 35%, rgba(0,0,0,0.5) 60%, transparent 80%)',
-            /* Backface fix: when camera sees the underside of the plane, theme color shows
-               instead of black. Using the primary theme gradient at low opacity. */
-            background: 'linear-gradient(135deg, rgba(116,86,200,0.45) 0%, rgba(42,157,143,0.35) 100%)',
+            /* Fix: set page background so wave backface shows theme color not black */
+            background: 'var(--bg-page)',
           }}
         >
-          <ShaderScene type={type} mod={mod} />
+          {/* Fix: explicit background layer so wave back-face shows theme color */}
+          <div style={{ position: 'absolute', inset: 0, background: 'var(--bg-page)', zIndex: 0 }} />
+          <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
+            <ShaderScene type={type} mod={mod} />
+          </div>
         </div>
       ) : (
         <ShaderScene type={type} mod={mod} />

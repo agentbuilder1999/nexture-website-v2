@@ -7,7 +7,7 @@ import GradientText from '@/components/GradientText';
 const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mgonqqdn';
 
 const contactDetails = [
-  { icon: '✉️', label: 'Email', value: 'hello@nexture.nz', href: 'mailto:hello@nexture.nz' },
+  { icon: '💼', label: 'LinkedIn', value: 'Nexture Limited', href: 'https://www.linkedin.com/company/nexture-limited/' },
   { icon: '📍', label: 'Address', value: 'Te Ohaka – Centre for Growth & Innovation\nK-Block, Ara Institute of Canterbury\nMadras Street, Christchurch Central\nChristchurch 8011, New Zealand', href: 'https://maps.google.com?q=Ara+Institute+of+Canterbury+Christchurch' },
   { icon: '🕘', label: 'Hours', value: 'Monday – Friday\n9:00 AM – 5:00 PM NZT', href: null },
 ];
@@ -149,18 +149,6 @@ export default function ContactPage() {
                 ))}
               </div>
 
-              {/* Book a call CTA */}
-              <div className="card-gradient-border">
-                <div className="card-gradient-border-inner">
-                  <h3 className="font-bold text-[var(--text-heading)] mb-2">📅 Book a Call with Victor</h3>
-                  <p className="text-sm text-[var(--text-secondary)] mb-4">
-                    Schedule a 30-minute video call to discuss TheraSeus and how it can fit your practice.
-                  </p>
-                  <a href="mailto:hello@nexture.nz?subject=Book a Call" className="btn-secondary text-sm py-2 px-5">
-                    Book a Catch-Up →
-                  </a>
-                </div>
-              </div>
             </SectionWrapper>
           </div>
         </div>

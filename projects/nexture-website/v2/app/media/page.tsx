@@ -1,9 +1,7 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import Image from 'next/image';
 import SectionWrapper from '@/components/SectionWrapper';
 import GradientText from '@/components/GradientText';
-import HeroBackground from '@/components/HeroBackground';
-import PartnerLogos from '@/components/PartnerLogos';
 
 export const metadata: Metadata = {
   title: 'Media & Press — Nexture',
@@ -18,18 +16,24 @@ const pressItems = [
   { outlet: 'Caffeine Daily', logo: '☕', headline: 'New Startup Tackles Diagnostic Delays', excerpt: "Nexture's TheraSeus is tackling one of the biggest bottlenecks in gastrointestinal diagnostics.", url: '#', date: '2024' },
 ];
 
-const podcasts = [
-  { platform: 'Spotify', icon: '🎵', url: '#' },
-  { platform: 'Apple Podcasts', icon: '🎙️', url: '#' },
-  { platform: 'YouTube', icon: '▶️', url: '#' },
-];
-
 export default function MediaPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative min-h-[45vh] flex items-center overflow-hidden pt-16 bg-[var(--bg-section-alt)]">
-        <HeroBackground type="section" opacity={0.25} />
+      <section className="relative min-h-[45vh] flex items-center overflow-hidden pt-16">
+        {/* Background image */}
+        <Image
+          src="/images/headers/m.jpg"
+          alt=""
+          fill
+          priority
+          quality={85}
+          className="object-cover object-center"
+          sizes="100vw"
+          aria-hidden="true"
+        />
+        {/* Dark overlay */}
+        <div className="absolute inset-0 z-[1]" style={{ background: 'rgba(0, 0, 0, 0.52)' }} />
         <div className="container mx-auto px-[var(--px-page)] py-20 relative z-10">
           <SectionWrapper>
             <p className="text-xs font-semibold text-[var(--primary)] uppercase tracking-widest mb-3">Press &amp; Media</p>
@@ -93,16 +97,28 @@ export default function MediaPage() {
                       Victor Sun and guests explore the intersection of artificial intelligence, healthcare innovation, and the future of clinical practice. Episodes available on all major platforms.
                     </p>
                     <div className="flex flex-wrap gap-3">
-                      {podcasts.map(({ platform, icon, url }) => (
-                        <a
-                          key={platform}
-                          href={url}
-                          className="btn-ghost text-sm py-2 px-4"
-                          aria-label={`Listen on ${platform}`}
-                        >
-                          {icon} {platform}
-                        </a>
-                      ))}
+                      <a
+                        href="https://open.spotify.com/show/5LR0JjJpCtay8ggsz8oROd"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--border-default)] bg-[var(--bg-elevated)] text-sm font-medium text-[var(--text-secondary)] hover:border-[#1DB954] hover:text-[#1DB954] transition-colors"
+                      >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                          <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                        </svg>
+                        Listen on Spotify
+                      </a>
+                      <a
+                        href="https://podcasts.apple.com/us/podcast/nexture-ai-dive/id1774201386"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--border-default)] bg-[var(--bg-elevated)] text-sm font-medium text-[var(--text-secondary)] hover:border-[#fc3c44] hover:text-[#fc3c44] transition-colors"
+                      >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                          <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 2.16c5.435 0 9.84 4.406 9.84 9.84 0 5.435-4.405 9.84-9.84 9.84-5.434 0-9.84-4.405-9.84-9.84 0-5.434 4.406-9.84 9.84-9.84zm0 1.68c-4.508 0-8.16 3.652-8.16 8.16s3.652 8.16 8.16 8.16 8.16-3.652 8.16-8.16-3.652-8.16-8.16-8.16zM12 6a6 6 0 1 1 0 12A6 6 0 0 1 12 6zm0 1.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zm0 1.5a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm0 1.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+                        </svg>
+                        Listen on Apple Podcasts
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -112,17 +128,6 @@ export default function MediaPage() {
         </div>
       </section>
 
-      {/* Partner logos */}
-      <section className="section-sm">
-        <div className="container mx-auto">
-          <SectionWrapper className="text-center">
-            <p className="text-sm font-semibold text-[var(--text-tertiary)] uppercase tracking-widest mb-8">
-              Trusted &amp; Supported By
-            </p>
-            <PartnerLogos />
-          </SectionWrapper>
-        </div>
-      </section>
     </>
   );
 }
