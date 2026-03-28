@@ -131,9 +131,7 @@ function StatsVideoSection() {
   }, []);
 
   // Fix 5: mute toggle — click toggles mute only, never pauses/restarts video
-  const handleVideoSectionClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleVideoSectionClick = () => {
     setIsMuted(prev => {
       const next = !prev;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -168,22 +166,22 @@ function StatsVideoSection() {
         transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(24px) scale(0.97)',
         transition: 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
         willChange: 'transform, opacity',
-        cursor: 'pointer',
       }}
       onTransitionEnd={handleTransitionEnd}
-      onClick={handleVideoSectionClick}
-      aria-label="Stats section with video background — click to toggle mute"
+      aria-label="Stats section with video background"
     >
       {/* Wistia video background */}
       <div
         className="wistia_embed wistia_async_3bhr3pi6rc videoFoam=true autoPlay=true silentAutoPlay=true controlsVisibleOnLoad=false playbar=false smallPlayButton=false volumeControl=false fullscreenButton=false playbackRateControl=false endVideoBehavior=loop"
-        style={{ pointerEvents: 'none', position: 'absolute', inset: 0, width: '100%', height: '100%' }}
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
       />
 
-      {/* Deeper grey overlay — stronger contrast for stats readability */}
+      {/* Deeper grey overlay — click here to toggle mute only */}
       <div
-        className="absolute inset-0 pointer-events-none"
-        style={{ background: 'rgba(0, 0, 0, 0.25)' }}
+        className="absolute inset-0"
+        style={{ background: 'rgba(0, 0, 0, 0.25)', cursor: 'pointer', zIndex: 5 }}
+        onClick={handleVideoSectionClick}
+        aria-label="Click to toggle mute"
       />
 
       {/* Fix 5 — mute indicator badge */}
