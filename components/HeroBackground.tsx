@@ -90,11 +90,24 @@ export default function HeroBackground({ type = 'hero', opacity = 0.55 }: HeroBa
             transformOrigin: 'center center',
             WebkitMaskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 35%, rgba(0,0,0,0.5) 60%, transparent 80%)',
             maskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 35%, rgba(0,0,0,0.5) 60%, transparent 80%)',
-            /* Backface fix: when camera sees the underside of the plane, theme color shows
-               instead of black. Using the primary theme gradient at low opacity. */
-            background: 'linear-gradient(135deg, rgba(116,86,200,0.45) 0%, rgba(42,157,143,0.35) 100%)',
+            /* Fix 3 — backface color: when camera sees underside, show theme gradient not black */
+            background: 'linear-gradient(135deg, rgba(116,86,200,0.60) 0%, rgba(42,157,143,0.50) 50%, rgba(12,5,36,0.80) 100%)',
           }}
         >
+          {/* Fix 3 — pseudo backface cover: absolutely positioned behind the canvas so
+              the wave's black underside is replaced by the theme gradient */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(135deg, #7456C8 0%, #2A9D8F 60%, #0C0524 100%)',
+              zIndex: 0,
+              borderRadius: '50%',
+              opacity: 0.55,
+              transform: 'scaleY(-1)',
+              pointerEvents: 'none',
+            }}
+          />
           <ShaderScene type={type} mod={mod} />
         </div>
       ) : (

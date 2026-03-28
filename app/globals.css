@@ -235,6 +235,11 @@ body {
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
+/* Fix 1 — ensure logo img itself is crisp, no inherited filter/blur */
+.nav-blur .logo-link img {
+  filter: none !important;
+  -webkit-filter: none !important;
+}
 
 /* ── ① Word Reveal (Aria) ───────────────────────────────────── */
 .word-reveal {

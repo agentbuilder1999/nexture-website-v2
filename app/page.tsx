@@ -16,10 +16,10 @@ const stats = [
 ];
 
 const features = [
-  { icon: '⏱', title: 'Save 90% Time', desc: 'From 60 minutes down to 6. AI prioritises the most critical frames for your review.' },
-  { icon: '🏥', title: 'No New Equipment', desc: 'Works with your existing Medtronic, Olympus, and Jinshan capsule endoscopy systems.' },
-  { icon: '💰', title: 'From $135/Case', desc: 'Pay-per-case pricing. Immediate ROI — each case saves $200+ in physician time.' },
-  { icon: '🔒', title: 'HIPAA Compliant', desc: 'Cloud or on-premise deployment. PHI de-identified locally before AI processing.' },
+  { icon: '⏱', title: 'Save 90% Time', desc: 'From 60 minutes down to 6. AI prioritises critical frames.' },
+  { icon: '🏥', title: 'No New Equipment', desc: 'Works with Medtronic, Olympus, and Jinshan systems.' },
+  { icon: '💰', title: 'From $135/Case', desc: 'Pay-per-case. Each case saves $200+ in physician time.' },
+  { icon: '🔒', title: 'HIPAA Compliant', desc: 'PHI de-identified locally before AI processing.' },
 ];
 
 // ── CountUp hook using IntersectionObserver ──────────────────
@@ -81,6 +81,7 @@ function StatsVideoSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [statsTriggered, setStatsTriggered] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
 
   useEffect(() => {
     // Load Wistia embed script
@@ -129,6 +130,22 @@ function StatsVideoSection() {
     };
   }, []);
 
+  // Fix 5: mute toggle — click toggles mute only, never pauses/restarts video
+  const handleVideoSectionClick = () => {
+    setIsMuted(prev => {
+      const next = !prev;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const W = (window as any).Wistia;
+      if (W) {
+        const video = W.api('3bhr3pi6rc');
+        if (video) {
+          if (next) video.mute(); else video.unmute();
+        }
+      }
+      return next;
+    });
+  };
+
   // Remove will-change after animation completes
   const handleTransitionEnd = () => {
     if (containerRef.current) {
@@ -147,9 +164,11 @@ function StatsVideoSection() {
         transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(24px) scale(0.97)',
         transition: 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
         willChange: 'transform, opacity',
+        cursor: 'pointer',
       }}
       onTransitionEnd={handleTransitionEnd}
-      aria-label="Stats section with video background"
+      onClick={handleVideoSectionClick}
+      aria-label="Stats section with video background — click to toggle mute"
     >
       {/* Wistia video background */}
       <div
@@ -160,8 +179,15 @@ function StatsVideoSection() {
       {/* Deeper grey overlay — stronger contrast for stats readability */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: 'rgba(100, 100, 100, 0.88)' }}
+        style={{ background: 'rgba(100, 100, 100, 0.44)' }}
       />
+
+      {/* Fix 5 — mute indicator badge */}
+      <div className="absolute top-4 right-4 z-20 pointer-events-none">
+        <span className="text-xs text-white/70 bg-black/40 px-2 py-1 rounded-full">
+          {isMuted ? '🔇' : '🔊'}
+        </span>
+      </div>
 
       {/* Stats overlay — centered */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -259,7 +285,7 @@ export default function HomePage() {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--border-default)] bg-[var(--bg-card)] text-xs font-semibold text-[var(--accent-purple)] mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary)] animate-pulse" />
-              Now Available — NZ &amp; US Healthcare
+              Now Available — NZ&amp;AU Healthcare
             </div>
 
             {/* item #4 — Hero H1: increased line-height to prevent overlap */}
@@ -349,13 +375,22 @@ export default function HomePage() {
                     TheraSeus — AI-assisted capsule endoscopy. Not for primary diagnosis.
                   </p>
                 </div>
+
+                {/* Fix 6B — "Explore TheraSeus →" button inside image, bottom-right */}
+                <div className="absolute bottom-3 right-3 z-10">
+                  <Link
+                    href="/product"
+                    className="text-sm px-3 py-1.5 bg-black/50 text-white rounded hover:bg-black/70 transition-colors"
+                    onClick={e => e.stopPropagation()}
+                  >
+                    Explore TheraSeus →
+                  </Link>
+                </div>
               </div>
             </SectionWrapper>
           </div>
 
-          <SectionWrapper className="text-center mt-10">
-            <Link href="/product" className="btn-secondary">Explore TheraSeus →</Link>
-          </SectionWrapper>
+          {/* Fix 6B — "Explore TheraSeus →" button moved inside image above */}
         </div>
       </section>
 
