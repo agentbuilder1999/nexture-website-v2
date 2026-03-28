@@ -6,7 +6,7 @@ import SectionWrapper from '@/components/SectionWrapper';
 import GradientText from '@/components/GradientText';
 
 // TODO: replace with real Formspree form ID — register at https://formspree.io
-const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mgonqqdn';
 
 const personas = [
   { emoji: '👨‍⚕️', role: 'Gastroenterologist', headline: '6 minutes instead of 60', desc: 'Spend your cognitive energy on diagnosis, not scanning through 55,000 frames. AI surfaces the top 1,250 priority frames — you confirm the findings.' },
