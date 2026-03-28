@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import SectionWrapper from '@/components/SectionWrapper';
 import GradientText from '@/components/GradientText';
-import PartnerLogos from '@/components/PartnerLogos';
 
 export const metadata: Metadata = {
   title: 'Media & Press — Nexture',
@@ -15,12 +14,6 @@ const pressItems = [
   { outlet: 'NZ Entrepreneur Magazine', logo: '📖', headline: 'The Kiwi AI Startup Revolutionising GI Healthcare', excerpt: "NZ Entrepreneur Magazine profiles Victor Sun and Nexture's mission to transform medical diagnostics.", url: 'https://nzentrepreneur.co.nz/nexture-the-kiwi-ai-startup-revolutionising-gastrointestinal-healthcare/', date: '2025' },
   { outlet: 'Ministry of Awesome', logo: '🚀', headline: 'Startup Stories: Victor Sun — Nexture', excerpt: 'Victor shares the story behind Nexture and the journey to building AI for capsule endoscopy.', url: 'https://ministryofawesome.com/startup-stories/startup-stories-victor-sun-nexture/', date: '2024' },
   { outlet: 'Caffeine Daily', logo: '☕', headline: 'New Startup Tackles Diagnostic Delays', excerpt: "Nexture's TheraSeus is tackling one of the biggest bottlenecks in gastrointestinal diagnostics.", url: '#', date: '2024' },
-];
-
-const podcasts = [
-  { platform: 'Spotify', icon: '🎵' },
-  { platform: 'Apple Podcasts', icon: '🎙️' },
-  { platform: 'YouTube', icon: '▶️' },
 ];
 
 export default function MediaPage() {
@@ -104,19 +97,22 @@ export default function MediaPage() {
                       Victor Sun and guests explore the intersection of artificial intelligence, healthcare innovation, and the future of clinical practice. Episodes available on all major platforms.
                     </p>
                     <div className="flex flex-wrap gap-3">
-                      {podcasts.map(({ platform, icon }) => (
-                        <span
-                          key={platform}
-                          className="btn-ghost text-sm py-2 px-4 opacity-50 cursor-not-allowed select-none relative group"
-                          aria-disabled="true"
-                          title="Coming Soon"
-                        >
-                          {icon} {platform}
-                          <span className="absolute -top-7 left-1/2 -translate-x-1/2 bg-[var(--bg-elevated)] border border-[var(--border-default)] text-[var(--text-secondary)] text-xs rounded px-2 py-0.5 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                            Coming Soon
-                          </span>
-                        </span>
-                      ))}
+                      <a
+                        href="https://open.spotify.com/show/5LR0JjJpCtay8ggsz8oROd"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 text-sm hover:bg-white/10 transition-colors"
+                      >
+                        🎵 Listen on Spotify
+                      </a>
+                      <a
+                        href="https://podcasts.apple.com/us/podcast/nexture-ai-dive/id1774201386"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 text-sm hover:bg-white/10 transition-colors"
+                      >
+                        🎙️ Listen on Apple Podcasts
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -126,17 +122,6 @@ export default function MediaPage() {
         </div>
       </section>
 
-      {/* Partner logos */}
-      <section className="section-sm">
-        <div className="container mx-auto">
-          <SectionWrapper className="text-center">
-            <p className="text-sm font-semibold text-[var(--text-tertiary)] uppercase tracking-widest mb-8">
-              Trusted &amp; Supported By
-            </p>
-            <PartnerLogos />
-          </SectionWrapper>
-        </div>
-      </section>
     </>
   );
 }

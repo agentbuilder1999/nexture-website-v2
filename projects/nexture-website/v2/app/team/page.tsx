@@ -1,9 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import Link from 'next/link';
 import SectionWrapper from '@/components/SectionWrapper';
 import GradientText from '@/components/GradientText';
-import HeroBackground from '@/components/HeroBackground';
 
 export const metadata: Metadata = {
   title: 'Team — Nexture',
@@ -24,44 +22,26 @@ const values = [
 export default function TeamPage() {
   return (
     <>
-      {/* ─── HERO with Remnant_Shell background ─────────────────── */}
+      {/* ─── HERO with background image ─────────────────── */}
       <section className="relative min-h-[55vh] flex items-center overflow-hidden pt-16">
-        {/* Remnant_Shell — right-anchored, left space for text */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/assets/remnant-shell.png"
-            alt=""
-            fill
-            priority
-            quality={80}
-            className="object-cover"
-            style={{
-              objectPosition: 'right center',
-              opacity: 0.28,
-              mixBlendMode: 'screen',
-            }}
-            sizes="100vw"
-            aria-hidden="true"
-          />
-          {/* Left-side text-protection gradient */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                'linear-gradient(to right, rgba(12,5,36,0.95) 0%, rgba(12,5,36,0.6) 50%, rgba(12,5,36,0.1) 100%)',
-            }}
-          />
-          {/* Bottom fade into page */}
-          <div
-            className="absolute bottom-0 left-0 right-0 h-32"
-            style={{
-              background: 'linear-gradient(to bottom, transparent, var(--bg-page))',
-            }}
-          />
-        </div>
-
-        {/* ShaderGradient section overlay */}
-        <HeroBackground type="section" opacity={0.2} />
+        {/* Background image */}
+        <Image
+          src="/images/headers/t.jpg"
+          alt=""
+          fill
+          priority
+          quality={85}
+          className="object-cover object-center"
+          sizes="100vw"
+          aria-hidden="true"
+        />
+        {/* Dark overlay */}
+        <div className="absolute inset-0 z-[1]" style={{ background: 'rgba(0, 0, 0, 0.52)' }} />
+        {/* Bottom fade into page */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-32 z-[2]"
+          style={{ background: 'linear-gradient(to bottom, transparent, var(--bg-page))' }}
+        />
 
         <div className="container mx-auto px-[var(--px-page)] py-24 relative z-10 max-w-2xl mr-auto">
           <SectionWrapper>
@@ -71,30 +51,6 @@ export default function TeamPage() {
             <p className="text-xl text-[var(--text-secondary)] leading-relaxed">
               Headquartered in Christchurch, New Zealand. Building AI for the future of healthcare.
             </p>
-          </SectionWrapper>
-        </div>
-      </section>
-
-      {/* ─── FOUNDER ─────────────────────────────────────────────── */}
-      <section className="section">
-        <div className="container mx-auto">
-          <SectionWrapper>
-            <div className="flex flex-col md:flex-row gap-8 items-center max-w-3xl mx-auto">
-              {/* Victor photo: placeholder removed — supply photo asset to re-enable */}
-              <div>
-                <p className="text-xs font-semibold text-[var(--primary)] uppercase tracking-widest mb-1">Founder &amp; CEO</p>
-                <h2 className="text-2xl font-bold text-[var(--text-heading)] mb-3">Victor Sun</h2>
-                <p className="text-sm text-[var(--text-secondary)] leading-relaxed mb-4">
-                  Victor leads Nexture with a vision to make AI-powered diagnostics accessible to every gastroenterology practice.
-                  With deep expertise in healthcare AI and product development, he is building the technology stack that enables
-                  clinicians to focus on what matters most — patient care.
-                </p>
-                <div className="flex gap-3">
-                  <Link href="/contact" className="btn-teal text-sm py-2 px-4">Get in Touch</Link>
-                  <a href="#" className="btn-ghost text-sm py-2 px-4">LinkedIn ↗</a>
-                </div>
-              </div>
-            </div>
           </SectionWrapper>
         </div>
       </section>
@@ -153,20 +109,6 @@ export default function TeamPage() {
         </div>
       </section>
 
-      {/* ─── HIRING CTA ───────────────────────────────────────────── */}
-      <section className="section bg-[var(--bg-section-alt)]">
-        <div className="container mx-auto text-center">
-          <SectionWrapper>
-            <GradientText as="h2" className="text-3xl font-extrabold mb-3">We&apos;re Hiring</GradientText>
-            <p className="text-[var(--text-secondary)] mb-6 max-w-lg mx-auto">
-              Join a small, focused team building the future of healthcare AI in New Zealand.
-            </p>
-            <a href="mailto:hello@nexture.nz?subject=Careers at Nexture" className="btn-primary">
-              View Open Roles →
-            </a>
-          </SectionWrapper>
-        </div>
-      </section>
     </>
   );
 }
