@@ -274,7 +274,7 @@ export default function HomePage() {
         </video>
 
         {/* Layer 2 — ShaderGradient (opacity 0.55, per spec) */}
-        <HeroBackground type="hero" opacity={0.55} />
+        <HeroBackground type="hero" opacity={0.44} />
 
         {/* Layer 3 — Particle field (120 particles, purple-pink-amber palette) */}
         {/* Particles must remain unaffected — z-index and container unchanged */}
