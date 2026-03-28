@@ -94,7 +94,11 @@ export default function HeroBackground({ type = 'hero', opacity = 0.55 }: HeroBa
             background: 'var(--bg-page)',
           }}
         >
-          <ShaderScene type={type} mod={mod} />
+          {/* Fix: explicit background layer so wave back-face shows theme color */}
+          <div style={{ position: 'absolute', inset: 0, background: 'var(--bg-page)', zIndex: 0 }} />
+          <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
+            <ShaderScene type={type} mod={mod} />
+          </div>
         </div>
       ) : (
         <ShaderScene type={type} mod={mod} />

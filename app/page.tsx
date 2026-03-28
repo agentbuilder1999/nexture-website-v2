@@ -179,7 +179,7 @@ function StatsVideoSection() {
       {/* Deeper grey overlay — stronger contrast for stats readability */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: 'rgba(100, 100, 100, 0.44)' }}
+        style={{ background: 'rgba(0, 0, 0, 0.25)' }}
       />
 
       {/* Fix 5 — mute indicator badge */}

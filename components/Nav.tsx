@@ -32,7 +32,7 @@ export default function Nav() {
       <div className="container mx-auto flex items-center justify-between px-6 h-16">
         {/* Logo — enlarged (item #1) */}
         <Link href="/" className="logo-link flex items-center gap-2 flex-shrink-0">
-          <Image src="/assets/logo.png" alt="Nexture" width={56} height={56} className="h-14 w-auto object-contain" unoptimized />
+          <Image src="/assets/logo.png" alt="Nexture" width={140} height={140} className="h-14 w-auto object-contain" unoptimized />
         </Link>
 
         {/* Desktop nav */}
