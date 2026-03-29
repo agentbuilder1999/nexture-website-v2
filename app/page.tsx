@@ -190,7 +190,7 @@ function StatsVideoSection() {
         {/* Deeper grey overlay — click here to toggle mute only */}
         <div
           className="absolute inset-0"
-          style={{ background: 'rgba(0, 0, 0, 0.25)', cursor: 'pointer', zIndex: 5 }}
+          style={{ background: 'rgba(0, 0, 0, 0.35)', cursor: 'pointer', zIndex: 5 }}
           onClick={handleVideoSectionClick}
           aria-label="Click to toggle mute"
         />
