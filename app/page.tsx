@@ -82,31 +82,29 @@ function StatsVideoSection() {
   const [isVisible, setIsVisible] = useState(false);
   const [statsTriggered, setStatsTriggered] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
   useEffect(() => {
-    // Load Wistia embed script
-    const script1 = document.createElement('script');
-    script1.src = 'https://fast.wistia.com/embed/medias/3bhr3pi6rc.jsonp';
-    script1.async = true;
-    const script2 = document.createElement('script');
-    script2.src = 'https://fast.wistia.com/assets/external/E-v1.js';
-    script2.async = true;
-    document.head.appendChild(script1);
-    document.head.appendChild(script2);
-
     // Respect prefers-reduced-motion
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (prefersReducedMotion) {
       setIsVisible(true);
       setStatsTriggered(true);
-      return () => {
-        document.head.removeChild(script1);
-        document.head.removeChild(script2);
-      };
+      setVideoLoaded(true);
+      // Load Wistia immediately for reduced-motion users
+      const s1 = document.createElement('script');
+      s1.src = 'https://fast.wistia.com/embed/medias/3bhr3pi6rc.jsonp';
+      s1.async = true;
+      const s2 = document.createElement('script');
+      s2.src = 'https://fast.wistia.com/assets/external/E-v1.js';
+      s2.async = true;
+      document.head.appendChild(s1);
+      document.head.appendChild(s2);
+      return;
     }
 
-    // Intersection Observer for scroll-triggered entrance
+    // Intersection Observer — lazy-load Wistia only when scrolled into view
     const el = containerRef.current;
     if (!el) return;
 
@@ -114,6 +112,18 @@ function StatsVideoSection() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
+          // Inject Wistia scripts only on first intersection
+          if (!document.querySelector('script[src*="wistia"]')) {
+            const s1 = document.createElement('script');
+            s1.src = 'https://fast.wistia.com/embed/medias/3bhr3pi6rc.jsonp';
+            s1.async = true;
+            const s2 = document.createElement('script');
+            s2.src = 'https://fast.wistia.com/assets/external/E-v1.js';
+            s2.async = true;
+            document.head.appendChild(s1);
+            document.head.appendChild(s2);
+          }
+          setVideoLoaded(true);
           // Stats count-up: delay 400ms after container animation starts
           setTimeout(() => setStatsTriggered(true), 400);
           observer.unobserve(entry.target);
@@ -123,11 +133,7 @@ function StatsVideoSection() {
     );
     observer.observe(el);
 
-    return () => {
-      observer.disconnect();
-      document.head.removeChild(script1);
-      document.head.removeChild(script2);
-    };
+    return () => observer.disconnect();
   }, []);
 
   // Fix 5: mute toggle — click toggles mute only, never pauses/restarts video
@@ -173,11 +179,13 @@ function StatsVideoSection() {
         className="relative w-full overflow-hidden min-h-[200px] md:min-h-[480px]"
         style={{ aspectRatio: '16/7' }}
       >
-        {/* Wistia video background */}
-        <div
-          className="wistia_embed wistia_async_3bhr3pi6rc videoFoam=true autoPlay=true silentAutoPlay=true controlsVisibleOnLoad=false playbar=false smallPlayButton=false volumeControl=false fullscreenButton=false playbackRateControl=false endVideoBehavior=loop"
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
-        />
+        {/* Wistia video background — lazy loaded on scroll */}
+        {videoLoaded && (
+          <div
+            className="wistia_embed wistia_async_3bhr3pi6rc videoFoam=true autoPlay=true silentAutoPlay=true controlsVisibleOnLoad=false playbar=false smallPlayButton=false volumeControl=false fullscreenButton=false playbackRateControl=false endVideoBehavior=loop"
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
+          />
+        )}
 
         {/* Deeper grey overlay — click here to toggle mute only */}
         <div
