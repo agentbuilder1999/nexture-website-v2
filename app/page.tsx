@@ -82,31 +82,29 @@ function StatsVideoSection() {
   const [isVisible, setIsVisible] = useState(false);
   const [statsTriggered, setStatsTriggered] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
   useEffect(() => {
-    // Load Wistia embed script
-    const script1 = document.createElement('script');
-    script1.src = 'https://fast.wistia.com/embed/medias/3bhr3pi6rc.jsonp';
-    script1.async = true;
-    const script2 = document.createElement('script');
-    script2.src = 'https://fast.wistia.com/assets/external/E-v1.js';
-    script2.async = true;
-    document.head.appendChild(script1);
-    document.head.appendChild(script2);
-
     // Respect prefers-reduced-motion
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (prefersReducedMotion) {
       setIsVisible(true);
       setStatsTriggered(true);
-      return () => {
-        document.head.removeChild(script1);
-        document.head.removeChild(script2);
-      };
+      setVideoLoaded(true);
+      // Load Wistia immediately for reduced-motion users
+      const s1 = document.createElement('script');
+      s1.src = 'https://fast.wistia.com/embed/medias/3bhr3pi6rc.jsonp';
+      s1.async = true;
+      const s2 = document.createElement('script');
+      s2.src = 'https://fast.wistia.com/assets/external/E-v1.js';
+      s2.async = true;
+      document.head.appendChild(s1);
+      document.head.appendChild(s2);
+      return;
     }
 
-    // Intersection Observer for scroll-triggered entrance
+    // Intersection Observer — lazy-load Wistia only when scrolled into view
     const el = containerRef.current;
     if (!el) return;
 
@@ -114,6 +112,18 @@ function StatsVideoSection() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
+          // Inject Wistia scripts only on first intersection
+          if (!document.querySelector('script[src*="wistia"]')) {
+            const s1 = document.createElement('script');
+            s1.src = 'https://fast.wistia.com/embed/medias/3bhr3pi6rc.jsonp';
+            s1.async = true;
+            const s2 = document.createElement('script');
+            s2.src = 'https://fast.wistia.com/assets/external/E-v1.js';
+            s2.async = true;
+            document.head.appendChild(s1);
+            document.head.appendChild(s2);
+          }
+          setVideoLoaded(true);
           // Stats count-up: delay 400ms after container animation starts
           setTimeout(() => setStatsTriggered(true), 400);
           observer.unobserve(entry.target);
@@ -123,11 +133,7 @@ function StatsVideoSection() {
     );
     observer.observe(el);
 
-    return () => {
-      observer.disconnect();
-      document.head.removeChild(script1);
-      document.head.removeChild(script2);
-    };
+    return () => observer.disconnect();
   }, []);
 
   // Fix 5: mute toggle — click toggles mute only, never pauses/restarts video
@@ -158,10 +164,8 @@ function StatsVideoSection() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full overflow-hidden video-section-entrance"
+      className="relative w-full video-section-entrance"
       style={{
-        minHeight: '480px',
-        aspectRatio: '16/7',
         opacity: isVisible ? 1 : 0,
         transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(24px) scale(0.97)',
         transition: 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -170,34 +174,58 @@ function StatsVideoSection() {
       onTransitionEnd={handleTransitionEnd}
       aria-label="Stats section with video background"
     >
-      {/* Wistia video background */}
+      {/* Video container — maintains aspect ratio on all viewports */}
       <div
-        className="wistia_embed wistia_async_3bhr3pi6rc videoFoam=true autoPlay=true silentAutoPlay=true controlsVisibleOnLoad=false playbar=false smallPlayButton=false volumeControl=false fullscreenButton=false playbackRateControl=false endVideoBehavior=loop"
-        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
-      />
+        className="relative w-full overflow-hidden min-h-[200px] md:min-h-[480px]"
+        style={{ aspectRatio: '16/7' }}
+      >
+        {/* Wistia video background — lazy loaded on scroll */}
+        {videoLoaded && (
+          <div
+            className="wistia_embed wistia_async_3bhr3pi6rc videoFoam=true autoPlay=true silentAutoPlay=true controlsVisibleOnLoad=false playbar=false smallPlayButton=false volumeControl=false fullscreenButton=false playbackRateControl=false endVideoBehavior=loop"
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
+          />
+        )}
 
-      {/* Deeper grey overlay — click here to toggle mute only */}
-      <div
-        className="absolute inset-0"
-        style={{ background: 'rgba(0, 0, 0, 0.25)', cursor: 'pointer', zIndex: 5 }}
-        onClick={handleVideoSectionClick}
-        aria-label="Click to toggle mute"
-      />
+        {/* Deeper grey overlay — click here to toggle mute only */}
+        <div
+          className="absolute inset-0"
+          style={{ background: 'rgba(0, 0, 0, 0.25)', cursor: 'pointer', zIndex: 5 }}
+          onClick={handleVideoSectionClick}
+          aria-label="Click to toggle mute"
+        />
 
-      {/* Fix 5 — mute indicator badge */}
-      <div className="absolute top-4 right-4 z-20 pointer-events-none">
-        <span className="text-xs text-white/70 bg-black/40 px-2 py-1 rounded-full">
-          {isMuted ? '🔇' : '🔊'}
-        </span>
+        {/* Fix 5 — mute indicator badge */}
+        <div className="absolute top-4 right-4 z-20 pointer-events-none">
+          <span className="text-xs text-white/70 bg-black/40 px-2 py-1 rounded-full">
+            {isMuted ? '🔇' : '🔊'}
+          </span>
+        </div>
+
+        {/* Stats overlay — desktop only, centered over video */}
+        <div className="hidden md:flex absolute inset-0 items-center justify-center pointer-events-none">
+          <div className="grid grid-cols-3 gap-16 px-8 text-center w-full max-w-4xl mx-auto">
+            {stats.map(({ value, suffix, prefix, label }) => (
+              <StatCard key={label} value={value} suffix={suffix} prefix={prefix} label={label} externalTrigger={statsTriggered} />
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* Stats overlay — centered */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-16 px-8 text-center w-full max-w-4xl mx-auto">
-          {stats.map(({ value, suffix, prefix, label }) => (
-            <StatCard key={label} value={value} suffix={suffix} prefix={prefix} label={label} externalTrigger={statsTriggered} />
-          ))}
-        </div>
+      {/* Stats — mobile only (≤768px), flows below video */}
+      <div className="md:hidden grid grid-cols-1 gap-6 px-8 pt-4 pb-8 text-center bg-[var(--bg-page)]">
+        {stats.map(({ value, suffix, prefix, label }, i) => (
+          <div
+            key={label}
+            style={{
+              opacity: statsTriggered ? 1 : 0,
+              transform: statsTriggered ? 'translateY(0)' : 'translateY(16px)',
+              transition: `opacity 0.5s cubic-bezier(0.16,1,0.3,1) ${i * 120}ms, transform 0.5s cubic-bezier(0.16,1,0.3,1) ${i * 120}ms`,
+            }}
+          >
+            <StatCard value={value} suffix={suffix} prefix={prefix} label={label} externalTrigger={statsTriggered} />
+          </div>
+        ))}
       </div>
     </section>
   );
@@ -246,7 +274,7 @@ export default function HomePage() {
   return (
     <>
       {/* ─── HERO ─────────────────────────────────────────────────── */}
-      <section className="relative min-h-screen flex items-center overflow-hidden pt-16">
+      <section className="relative min-h-[60vh] md:min-h-screen flex items-center overflow-hidden pt-16">
 
         {/* Layer 0 — Neural_Sieve base illustration */}
         <div className="absolute inset-0 z-0">
@@ -283,7 +311,7 @@ export default function HomePage() {
         <HeroParticles />
 
         {/* Layer 3 — text content */}
-        <div className="relative z-10 container mx-auto px-[var(--px-page)] py-24 md:py-32">
+        <div className="relative z-10 container mx-auto px-[var(--px-page)] pt-16 pb-8 md:py-32">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--border-default)] bg-[var(--bg-card)] text-xs font-semibold text-[var(--accent-purple)] mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary)] animate-pulse" />
