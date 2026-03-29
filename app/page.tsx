@@ -170,8 +170,8 @@ function StatsVideoSection() {
     >
       {/* Video container — maintains aspect ratio on all viewports */}
       <div
-        className="relative w-full overflow-hidden"
-        style={{ minHeight: '480px', aspectRatio: '16/7' }}
+        className="relative w-full overflow-hidden min-h-[200px] md:min-h-[480px]"
+        style={{ aspectRatio: '16/7' }}
       >
         {/* Wistia video background */}
         <div
