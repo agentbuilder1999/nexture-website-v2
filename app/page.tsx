@@ -266,7 +266,7 @@ export default function HomePage() {
   return (
     <>
       {/* ─── HERO ─────────────────────────────────────────────────── */}
-      <section className="relative min-h-screen flex items-center overflow-hidden pt-16">
+      <section className="relative min-h-[60vh] md:min-h-screen flex items-center overflow-hidden pt-16">
 
         {/* Layer 0 — Neural_Sieve base illustration */}
         <div className="absolute inset-0 z-0">
