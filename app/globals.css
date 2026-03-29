@@ -319,3 +319,18 @@ body {
     transform: none !important;
   }
 }
+
+/* ── Hero wave: hide shadergradient entrance spin, fade in after settle ── */
+.hero-bg-reveal {
+  animation: heroWaveFadeIn 0.8s ease-out 0.8s forwards;
+}
+@keyframes heroWaveFadeIn {
+  from { opacity: 0; }
+  to   { opacity: var(--hero-bg-opacity, 0.44); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg-reveal {
+    animation: none !important;
+    opacity: var(--hero-bg-opacity, 0.44) !important;
+  }
+}

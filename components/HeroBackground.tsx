@@ -77,7 +77,10 @@ export default function HeroBackground({ type = 'hero', opacity = 0.55 }: HeroBa
   if (!mod) return null;
 
   return (
-    <div className="absolute inset-0 z-0" style={{ opacity, perspective: '1200px' }}>
+    <div
+      className="absolute inset-0 z-0 hero-bg-reveal"
+      style={{ opacity: 0, perspective: '1200px', '--hero-bg-opacity': opacity } as React.CSSProperties}
+    >
       {type === 'hero' ? (
         <div
           style={{
