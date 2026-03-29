@@ -303,7 +303,7 @@ export default function HomePage() {
         <HeroParticles />
 
         {/* Layer 3 — text content */}
-        <div className="relative z-10 container mx-auto px-[var(--px-page)] py-24 md:py-32">
+        <div className="relative z-10 container mx-auto px-[var(--px-page)] pt-16 pb-8 md:py-32">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--border-default)] bg-[var(--bg-card)] text-xs font-semibold text-[var(--accent-purple)] mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary)] animate-pulse" />
