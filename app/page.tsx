@@ -205,9 +205,18 @@ function StatsVideoSection() {
       </div>
 
       {/* Stats — mobile only (≤768px), flows below video */}
-      <div className="md:hidden grid grid-cols-1 gap-8 px-8 py-10 text-center bg-[var(--bg-page)]">
-        {stats.map(({ value, suffix, prefix, label }) => (
-          <StatCard key={label} value={value} suffix={suffix} prefix={prefix} label={label} externalTrigger={statsTriggered} />
+      <div className="md:hidden grid grid-cols-1 gap-6 px-8 pt-4 pb-8 text-center bg-[var(--bg-page)]">
+        {stats.map(({ value, suffix, prefix, label }, i) => (
+          <div
+            key={label}
+            style={{
+              opacity: statsTriggered ? 1 : 0,
+              transform: statsTriggered ? 'translateY(0)' : 'translateY(16px)',
+              transition: `opacity 0.5s cubic-bezier(0.16,1,0.3,1) ${i * 120}ms, transform 0.5s cubic-bezier(0.16,1,0.3,1) ${i * 120}ms`,
+            }}
+          >
+            <StatCard value={value} suffix={suffix} prefix={prefix} label={label} externalTrigger={statsTriggered} />
+          </div>
         ))}
       </div>
     </section>
