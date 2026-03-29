@@ -158,10 +158,8 @@ function StatsVideoSection() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full overflow-hidden video-section-entrance"
+      className="relative w-full video-section-entrance"
       style={{
-        minHeight: '480px',
-        aspectRatio: '16/7',
         opacity: isVisible ? 1 : 0,
         transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(24px) scale(0.97)',
         transition: 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -170,34 +168,47 @@ function StatsVideoSection() {
       onTransitionEnd={handleTransitionEnd}
       aria-label="Stats section with video background"
     >
-      {/* Wistia video background */}
+      {/* Video container — maintains aspect ratio on all viewports */}
       <div
-        className="wistia_embed wistia_async_3bhr3pi6rc videoFoam=true autoPlay=true silentAutoPlay=true controlsVisibleOnLoad=false playbar=false smallPlayButton=false volumeControl=false fullscreenButton=false playbackRateControl=false endVideoBehavior=loop"
-        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
-      />
+        className="relative w-full overflow-hidden"
+        style={{ minHeight: '480px', aspectRatio: '16/7' }}
+      >
+        {/* Wistia video background */}
+        <div
+          className="wistia_embed wistia_async_3bhr3pi6rc videoFoam=true autoPlay=true silentAutoPlay=true controlsVisibleOnLoad=false playbar=false smallPlayButton=false volumeControl=false fullscreenButton=false playbackRateControl=false endVideoBehavior=loop"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
+        />
 
-      {/* Deeper grey overlay — click here to toggle mute only */}
-      <div
-        className="absolute inset-0"
-        style={{ background: 'rgba(0, 0, 0, 0.25)', cursor: 'pointer', zIndex: 5 }}
-        onClick={handleVideoSectionClick}
-        aria-label="Click to toggle mute"
-      />
+        {/* Deeper grey overlay — click here to toggle mute only */}
+        <div
+          className="absolute inset-0"
+          style={{ background: 'rgba(0, 0, 0, 0.25)', cursor: 'pointer', zIndex: 5 }}
+          onClick={handleVideoSectionClick}
+          aria-label="Click to toggle mute"
+        />
 
-      {/* Fix 5 — mute indicator badge */}
-      <div className="absolute top-4 right-4 z-20 pointer-events-none">
-        <span className="text-xs text-white/70 bg-black/40 px-2 py-1 rounded-full">
-          {isMuted ? '🔇' : '🔊'}
-        </span>
+        {/* Fix 5 — mute indicator badge */}
+        <div className="absolute top-4 right-4 z-20 pointer-events-none">
+          <span className="text-xs text-white/70 bg-black/40 px-2 py-1 rounded-full">
+            {isMuted ? '🔇' : '🔊'}
+          </span>
+        </div>
+
+        {/* Stats overlay — desktop only, centered over video */}
+        <div className="hidden md:flex absolute inset-0 items-center justify-center pointer-events-none">
+          <div className="grid grid-cols-3 gap-16 px-8 text-center w-full max-w-4xl mx-auto">
+            {stats.map(({ value, suffix, prefix, label }) => (
+              <StatCard key={label} value={value} suffix={suffix} prefix={prefix} label={label} externalTrigger={statsTriggered} />
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* Stats overlay — centered */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-16 px-8 text-center w-full max-w-4xl mx-auto">
-          {stats.map(({ value, suffix, prefix, label }) => (
-            <StatCard key={label} value={value} suffix={suffix} prefix={prefix} label={label} externalTrigger={statsTriggered} />
-          ))}
-        </div>
+      {/* Stats — mobile only (≤768px), flows below video */}
+      <div className="md:hidden grid grid-cols-1 gap-8 px-8 py-10 text-center bg-[var(--bg-page)]">
+        {stats.map(({ value, suffix, prefix, label }) => (
+          <StatCard key={label} value={value} suffix={suffix} prefix={prefix} label={label} externalTrigger={statsTriggered} />
+        ))}
       </div>
     </section>
   );
